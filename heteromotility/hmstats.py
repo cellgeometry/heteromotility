@@ -23,7 +23,6 @@ import numpy as np
 import math
 from scipy import stats
 from scipy import interpolate
-from dfa import dfa
 from statsmodels.tsa.stattools import acf, pacf
 
 def average_xy( coor1, coor2 ):
@@ -123,7 +122,13 @@ class GeneralFeatures:
         spearmanrsq = {}
         for u in cell_ids:
             xy = np.array( cell_ids[u] )
-            rho, pval = stats.spearmanr( xy )
+            if len(np.unique(xy[:,0])) == 1 or len(np.unique(xy[:,1])) == 1:
+                # fuzz to avoid bounds issue
+                print('Tracks for cell_id %s were invariant in at least one dimension.' % u)
+                print('Spearman coefficient is undefined, and should not be used for analysis.')
+                rho = 0.
+            else:
+                rho, pval = stats.spearmanr( xy )
             spearmanrsq[u] = rho**2
         return spearmanrsq
 

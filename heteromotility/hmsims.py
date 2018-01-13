@@ -1,8 +1,8 @@
 from __future__ import division
 import random
-from hmstats import GeneralFeatures, RWFeatures, MSDFeatures
-from hmtrack import CellPaths
-from hmtools import dictofdict2array, tripledict2array, merge_flat_lists
+from .hmstats import GeneralFeatures, RWFeatures, MSDFeatures
+from .hmtrack import CellPaths
+from .hmtools import dictofdict2array, tripledict2array, merge_flat_lists
 import numpy as np
 from functools import partial
 from multiprocessing import Pool

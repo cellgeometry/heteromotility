@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 from __future__ import division, print_function
 
-from .hmtools import *
-from .hmstats import GeneralFeatures, MSDFeatures, RWFeatures
-from .hmtrack import *
-from .hmio import *
-from . import hmtests
+from heteromotility.hmtools import *
+from heteromotility.hmstats import GeneralFeatures, MSDFeatures, RWFeatures
+from heteromotility.hmtrack import *
+from heteromotility.hmio import *
+import heteromotility.hmtests
 import csv
 import glob
 import sys

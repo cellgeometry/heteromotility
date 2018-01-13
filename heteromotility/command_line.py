@@ -1,4 +1,4 @@
-import heteromotility
+import .heteromotility
 
 def cli():
     heteromotility.main()

@@ -1,94 +1,67 @@
-from hmtrack import *
-
 '''
-#---------------------------
-# MODULE CONTENTS
-#---------------------------
-Functions to/for:
-
-Test efficacy of heteromotility package
-
+Heteromotilit test suite
 '''
-#------------------------------
-# Tests
-#------------------------------
-# Tests cell_id generation
+import numpy as np
+from numpy.testing import assert_almost_equal
+import pandas as pd
 
-# Tests feature calculation functions
+from .hmtrack import CellPaths
+from .hmstats import GeneralFeatures, MSDFeatures, RWFeatures
+from .hmtools import make_merged_list, single_outputs_list
 
-# Tests sanity_check corrections
+class TestInvariantTrackFuzzing(object):
+    '''
+    Tests fuzzing of tracks which have an invariant dimension
+    '''
 
-def test_sanity():
-	sanity_px = 5
+    def test_check_invariant(self):
 
-	test_data = { 0:[ (1, 2), (15, 20), (1, 3), (2, 3), (2,3), (2,3), (2,4), (2,3), (2,4)],
-  			      1:[ (1, 1), (1, 3), (1, 5), (0, 5), (1,5), (1,5), (1,5), (1,6), (2,6)],
-				  2:[ (4, 3), (20, 43), (4, 4),  (5, 4), (5,5), (5,5), (6,5), (5,6), (5,5)]}
+        x = np.zeros([10,50])
+        y = np.zeros([10,50])
+        fuzz = np.random.random(x.shape)
+        fuzz[9,:] = 0
+        x += fuzz
+        fuzz = np.random.random(x.shape)
+        fuzz[7,:] = 0
+        y += fuzz
 
-	proper_ids = {0: [(1, 2), (1.0, 2.5), (1, 3), (2, 3), (2, 3), (2, 3), (2,4), (2,3), (2,4)],
-				  1: [(1, 1), (1, 3), (1, 5), (0, 5), (1, 5), (1, 5), (1,5), (1,6), (2,6)],
-				  2: [(4, 3), (4.0, 3.5), (4, 4), (5, 4), (5, 5), (5, 5), (6,5), (5,6), (5,5)]}
-	proper_removed = {}
-	proper_changes =  [ [(15, 20), (1.0, 2.5), (1, 2), (1, 3)],
-					    [(20, 43), (4.0, 3.5), (4, 3), (4, 4)] ]
+        cp = CellPaths(tracksX=x, tracksY=y)
+        idx = np.where(cp.invariant_tracks.sum(1)>0)[0]
+        assert (7 in idx)
+        assert (9 in idx)
 
-	cp = CellPaths(cell_ids = test_data, sanity_px = 5)
-	test_ids = cp.cell_ids
-	test_removed = cp.removed_cells
-	test_changes = cp.points_corrected
+    def test_fuzzed_stats(self):
 
-	if proper_ids == test_ids and proper_removed == test_removed and proper_changes == test_changes:
-		return True
-	else:
-		return False
+        x = np.zeros((3,50))
+        x[0,:] = np.linspace(1,10,50)
+        x[1,:] = np.linspace(17,25,50)
+        x[2,:] = np.linspace(9,33,50)
 
-# Test removal of lost cells
+        y = np.zeros((3,50))
+        y[0,:] = np.linspace(0,5,50)
+        y[2,:] = np.linspace(11,21,50)
 
-def test_removal():
+        cp0 = CellPaths(tracksX=x, tracksY=y)
+        cp1 = CellPaths(tracksX=x, tracksY=y)
 
-	sanity_px = 5
-	test_data = { 0:[ (1, 2), (1 ,3), (15, 20), (10, 30), (25, 35), (12,32), (22,3), (20, 20), (1,5), (1,4)],
-  			      1:[ (1, 1), (1, 3), (1, 5), (0, 5), (1,5), (1,5), (1,6), (1,7)],
-				  2:[ (4, 3), (4, 3), (20, 43), (14, 14),  (25, 4), (45,5), (15,15), (20, 20), (4,4), (4,3)]}
+        gf0 = GeneralFeatures(cp0.cell_ids, move_thresh = 0.1)
+        msdf0 = MSDFeatures(cp0.cell_ids)
+        rwf0 = RWFeatures(cp0.cell_ids, gf0)
+        ind_outputs0 = single_outputs_list(cp0.cell_ids, gf0, rwf0, msdf0, '.', suffix='')
+        merged_list0 = make_merged_list(ind_outputs0, gf0, rwf0)
 
-	proper_ids = { 1:[ (1, 1), (1, 3), (1, 5), (0, 5), (1,5), (1,5), (1,6), (1,7)] }
+        gf1 = GeneralFeatures(cp1.cell_ids, move_thresh = 0.1)
+        msdf1 = MSDFeatures(cp1.cell_ids)
+        rwf1 = RWFeatures(cp1.cell_ids, gf1)
+        ind_outputs1 = single_outputs_list(cp1.cell_ids, gf1, rwf1, msdf1, '.', suffix='')
+        merged_list1 = make_merged_list(ind_outputs1, gf1, rwf1)
 
-	proper_removed = [0,2]
-	proper_changes = [[(25, 35), (11.0, 31.0), (10, 30), (12, 32)]]
+        df0 = pd.DataFrame(merged_list0)
+        df1 = pd.DataFrame(merged_list1)
+        # delete undefined features for invariant tracks
+        # linearity, spearman, etc.
+        drop_idx = [0, 1, 4, 5, 15] + list(range(47, df0.shape[1]))
+        df0 = df0.drop(drop_idx, axis=1)
+        df1 = df1.drop(drop_idx, axis=1)
 
-	cp = CellPaths(cell_ids = test_data, sanity_px = 5)
-	test_ids = cp.cell_ids
-	test_removed = list(cp.removed_cells)
-	test_changes = cp.points_corrected
-
-	if proper_ids == test_ids and proper_removed == test_removed and proper_changes == test_changes:
-		result =  True
-	else:
-		result = False
-
-	return result #,test_ids, test_removed, test_changes
-
-# Unit test for finding colliders
-def test_colliders():
-
-	test_data = {
-	0:[(0,0),(1,3),(1,5),(2,7),(3,5),(6,6),(5,5),(6,6),(5,5),(6,6),(5,5),(7,7)],
-	1:[(5,4),(3,2),(3,3),(5,5),(6,6),(3,5)],
-	2:[(3,3),(2,3),(1,5),(2,7),(3,4),(3,4)],
-	3:[(2,4),(5,4),(3,4),(5,5),(3,2),(6,7)],
-	4:[(3,3),(7,8),(8,9),(5,5),(2,1),(9,9)]
-	}
-
-	colliders, colliding_t, prop_colliders = find_colliders(test_data)
-
-	correct_colliders = [2,2]
-	correct_coliding_t = [2,3]
-	correct_prop_colliders = ( 2/3 )
-
-	correct = [correct_colliders, correct_coliding_t, correct_prop_colliders]
-	test = [colliders, colliding_t, prop_colliders]
-
-	if test == correct:
-		return True
-	else:
-		return False
+        diff = df0 - df1

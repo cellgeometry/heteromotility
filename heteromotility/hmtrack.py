@@ -1,6 +1,6 @@
 from __future__ import division, print_function
-from hmtools import dedupe
-from hmstats import distance, average_xy
+from .hmtools import dedupe, cell_ids2tracks
+from .hmstats import distance, average_xy
 import sys
 import numpy as np
 
@@ -44,6 +44,9 @@ class CellPaths:
                 }
     '''
     def __init__(self, centroid_arrays = [], cell_ids = {}, tracksX=None, tracksY=None, sanity_px = 200, interp_lim = 3):
+
+        self.epsilon = 1e-9
+
         if len(centroid_arrays) > 0:
             self.cell_ids, self.removed_cells, self.points_corrected = self.establish_cell_paths(centroid_arrays, sanity_px, interp_lim)
         elif len(cell_ids) > 0 and sanity_px != None:
@@ -55,6 +58,9 @@ class CellPaths:
         else:
             print("CellPaths requires an array of centroids or provided cell_ids")
             sys.exit()
+
+        # self.check_invariant_tracks()
+        # self.fuzz_invariant_tracks()
 
     # assign each object in t0 centroids array a key in cell_ids dict
     # keys are just iterated integers, could do something fancier
@@ -185,6 +191,40 @@ class CellPaths:
             removed[u] = cell_ids.pop(u, None)
 
         return cell_ids, removed
+
+    def check_invariant_tracks(self):
+        '''
+        Checks for non-zero movement in both `X` and `Y` dimensions.
+        '''
+        invariant = np.zeros((len(self.cell_ids), 2))
+
+        i = 0
+        for u in self.cell_ids:
+            path = self.cell_ids[u]
+            XY = np.array(path)
+            x_unique = np.unique(XY[:,0])
+            y_unique = np.unique(XY[:,1])
+            invariant[i,:] = (len(x_unique) <= 1, len(y_unique) <= 1)
+            i += 1
+
+        self.invariant_tracks = invariant
+        return
+
+    def fuzz_invariant_tracks(self):
+        '''
+        Applies random epsilon noise to prevent invariant tracks
+        if an invariant track has been detected
+        '''
+        if self.invariant_tracks.sum() > 0:
+
+            tracksX, tracksY = cell_ids2tracks(self.cell_ids)
+            tracksX += (2+np.random.randn(*tracksX.shape))*self.epsilon
+            tracksY += (2+np.random.randn(*tracksY.shape))*self.epsilon
+            tracksX[tracksX<0] = 0
+            tracksY[tracksY<0] = 0 # in case fuzz made negative vals
+            self.cell_ids = self.tracks2cell_ids(tracksX, tracksY)
+
+        return
 
 
 #------------------------------

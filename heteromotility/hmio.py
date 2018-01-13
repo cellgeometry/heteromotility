@@ -1,22 +1,12 @@
+'''
+Heteromotility input/output functions
+'''
+
 from __future__ import print_function
 import csv
 import glob
 import pickle
 import numpy as np
-
-'''
-#---------------------------
-# MODULE CONTENTS
-#---------------------------
-Functions to/for:
-Import/export data
-
-'''
-
-#------------------------------
-# IMPORT CENTROIDS FROM CSVs
-#------------------------------
-
 
 def import_centroids(input_dir):
     print("--------------------------------")
@@ -147,3 +137,12 @@ def pickle_removed_ids( removed_ids, sobel, output_dir ):
 
     pickle.dump( removed_ids, open(pickle_output, 'wb') )
     print("Pickled removed_ids for ", output_dir)
+
+motility_header = ['Well/XY', 'cell_id', 'total_distance', 'net_distance', 'linearity', 'spearmanrsq','progressivity',
+    'max_speed', 'min_speed', 'avg_speed', 'MSD_slope', 'hurst_RS', 'nongauss', 'disp_var', 'disp_skew', 'rw_linearity', 'rw_netdist', 'rw_kurtosis01',
+    'rw_kurtosis02', 'rw_kurtosis03', 'rw_kurtosis04', 'rw_kurtosis05', 'rw_kurtosis06', 'rw_kurtosis07',
+    'rw_kurtosis08', 'rw_kurtosis09', 'rw_kurtosis10', 'avg_moving_speed01', 'avg_moving_speed02',
+    'avg_moving_speed03', 'avg_moving_speed04', 'avg_moving_speed05', 'avg_moving_speed06',
+    'avg_moving_speed07', 'avg_moving_speed08', 'avg_moving_speed09', 'avg_moving_speed10',
+    'time_moving01', 'time_moving02', 'time_moving03', 'time_moving04', 'time_moving05',
+    'time_moving06', 'time_moving07', 'time_moving08', 'time_moving09', 'time_moving10']
