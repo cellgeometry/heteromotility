@@ -4,9 +4,9 @@
 
 `Heteromotility` is a tool for analyzing cell motility in a quantitative manner. `Heteromotility` takes timelapse imaging data as input and calculates 70+ 'motility features' that can be used to generate a 'motility fingerprint' for a given cell. By analyzing more features of cell motility than most common cell tracking methods, `Heteromotility` may be able to identify novel heterogenous motility phenotypes.
 
-`Heteromotility` also contains a suite of tools to quantify and visualize cell state spaces, and dynamic state transitions within the state space. While these tools were developed for use with `Heteromotility` features, they may be applied to any arbitrary time-series feature set. These tools are implemented modularly, separate from the core `Heteromotility` feature extraction package.
+`Heteromotility` also contains a suite of tools to quantify and visualize cell state spaces, and dynamic state transitions within the state space. While these tools were developed for use with `Heteromotility` features, they may be applied to any arbitrary time-series feature set.
 
-Heteromotility is developed by [Jacob Kimmel](http://jacobkimmel.github.io/) in the [Brack](http://www.bracklab.com/) and [Marshall](http://biochemistry2.ucsf.edu/labs/marshall/) Labs at the [University of California, San Francisco](http://www.ucsf.edu/).
+`Heteromotility` is developed by [Jacob Kimmel](http://jacobkimmel.github.io/) in the [Laboratory of Cell Geometry](http://cellgeometry.ucsf.edu/) in the [Center for Cellular Contstruction](http://ccc.ucsf.edu) at the [University of California, San Francisco](http://www.ucsf.edu/).
 
 We've posted a pre-print applying `Heteromotility` analysis to quantify dynamic cell state transitions in muscle stem cells and a cancer cell model. Check it out on bioRxiv!  
 
@@ -22,7 +22,7 @@ or
 
 Simply clone this repository and run **setup.py** in the standard manner.  
 
-    $ git clone https://github.com/jacobkimmel/heteromotility
+    $ git clone https://github.com/cellgeometry/heteromotility
     $ cd heteromotility
     $ python setup.py install
     $ heteromotility -h
@@ -89,17 +89,24 @@ The optional argument `--output_suffix` can be used to add a suffix to the outpu
     $ ls
     motility_statistics.csv motility_statistics_TEST_SUFFIX.csv
 
+## Demo
+
+As a demonstration, simulated cell paths are provided for multiple models of motion in the `demo/` directory. These paths are saved as Python pickle objects.
+
+To calculate Heteromotility features for a simulated path, simply run the following. (**Note:** Assumes `heteromotility` is present as an alias, as described above.)
+
+    $ heteromotility ./ demo/sim_XYZ/ --exttrack demo/sim_XYZ/sim_XYZ.pickle
+
 ## Split Motility Path Calculation
 
-Heteromotility supports splitting an object's path into multiple subpaths and calculating features for each subpath. This is useful to investigate changes in an object's motility over time. This feature is triggered with the `--detailedbalance` command line flag, followed by an integer specifying the length of temporal windows to consider. By default, paths are extracted from non-overlapping windows (i.e. the stride is equal to window size). This can be changed by using the `--sliding_window` command line flag followed by an integer specifying the stride of temporal windows for comparison. Additional flags are document in the help menu (`heteromotility -h`) to control the number of windows measured.
-
+Heteromotility supports splitting an object's path into multiple subpaths and calculating features for each subpath. This is useful to investigate changes in an object's motility over time. This feature is triggered with the `--detailedbalance` command line flag, followed by an integer specifying the minimum number of path steps to consider. Heteromotility will calculate features for every subpath of the minimum length, and every possible length up to 1/2 the total length of the supplied path.  
 **Note:** Subpaths have a minimum length of 20 steps, as multiple `Heteromotility` features rely upon regression analyses that are confounded by exceedingly small path lengths.
 
 This feature is executed like so:
 
-    $ heteromotility /path/to/csvs /output/path/ --detailedbalance $WIDTH --sliding_window $STRIDE
+    $ heteromotility /path/to/csvs /output/path/ --detailedbalance 20
 
-where the `WIDTH` is the size of subpath windows and `STRIDE` is the stride of windows along the time series.
+where the integer 20 can be replaced by your desired minimum path length.
 
 The resulting output files will be named `motility_statistics_split_LENGTH.csv` where `LENGTH` is the subpath size for those features. Importantly, the `cell_ids` column will now contain additional information. In addition to the unique cell identifier, `cell_ids` will contain a dash `-` following the identifier with subpath number, indexed beginning at `0`. The format appears:
 
@@ -151,19 +158,3 @@ To export this dictionary as a pickle, use the standard Python pickle library.
     > import pickle
     > with file('output_name.pickle', 'wb') as of:
     >   pickle.dump(object_paths, of)
-
-# Analysis
-
-## Dimensionality Reduction and Clustering
-
-Functions for dimensionality reduction and clustering are implemented in the `R` language, and may be found in `analysis/hm_common_fnx.R`. An example of a simple analysis script is provided in `mef_analysis.R`.
-
-## Supervised Classification
-
-SVM classification models are implemented in `analysis/python/mef_classif.py`. Functions are also included to perform round-robin analysis of multiple experiments, and a Grid Search for hyperparameter optimization.
-
-## State Dynamics Analysis
-
-State dynamics analyze the output of a series of temporal windows calculated by `Heteromotility`, as outlined above. *N*-dimensional course-grained probability flux analysis (ND-cgPFA) is implemented in `analysis/python/pfa.py`. `pfa.py` also contains tools to quantify statewise transition vectors in PCA space.
-
-Two dimensional cgPFA is also implemented in `R` at `cgpfa.R`. Tools for visualizing divergence in cgPFA state spaces are implemented in `Matlab` in `analysis/pfa_divergence.m`. A visualization run may be performed by quantifying state transitions using `cgpfa.R` and `pfa_divergence.m` to generate both 2D and 3D divergence maps.
