@@ -102,7 +102,7 @@ def main():
     # DETAILED BALANCE ANALYSIS
     #------------------------------
     if detailed_balance != -1:
-        from hmdetail import DetailedBalance
+        from heteromotility.hmdetail import DetailedBalance
         db = DetailedBalance(cp.cell_ids, min_split = detailed_balance, tau_max = dbmax)
 
         if sliding_window == -1:
