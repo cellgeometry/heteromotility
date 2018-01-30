@@ -8,9 +8,11 @@
 
 `Heteromotility` is developed by [Jacob Kimmel](http://jacobkimmel.github.io/) in the [Laboratory of Cell Geometry](http://cellgeometry.ucsf.edu/) in the [Center for Cellular Contstruction](http://ccc.ucsf.edu) at the [University of California, San Francisco](http://www.ucsf.edu/).
 
-We've posted a pre-print applying `Heteromotility` analysis to quantify dynamic cell state transitions in muscle stem cells and a cancer cell model. Check it out on bioRxiv!  
+We have a recent paper in *PLoS Computational Biology* using `Heteromotility` analysis to quantify dynamic cell state transitions in muscle stem cells and a cancer cell model. Check it out and let us know what you think!
 
-[Inferring cell state by quantitative motility analysis reveals a dynamic state system and broken detailed balance](http://www.biorxiv.org/content/early/2017/07/26/168534.article-info)
+[Inferring cell state by quantitative motility analysis reveals a dynamic state system and broken detailed balance](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005927)
+
+We also have videos of Heteromotility analysis in action in multiple cell types on our [lab website's Heteromotility page](https://cellgeometry.ucsf.edu/heteromotility).
 
 ## Installation
 
