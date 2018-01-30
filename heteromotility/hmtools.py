@@ -139,6 +139,39 @@ def single_outputs_list(cell_ids, gf, rwf, msdf, output_dir, suffix=None):
 
     return output_list
 
+
+def fix_order(correct_order, new_order, sorting):
+    '''
+    Fixes the order of a list in `sorting` with `new_order` to
+    match the index order layed out in `correct_order`.
+
+    Parameters
+    ----------
+    correct_order : list.
+        contains keys in the correct order, guides sorting of the list `sorting`
+    new_order : list.
+        contains same set of keys in correct_order, but in a different order.
+    sorting : list.
+        list to be sorted based on the order in `correct_order`.
+    '''
+    # if order is correct, return input seq
+    if correct_order == new_order:
+        return sorting, new_order
+
+    new_idx_order = [] # idx's of `correct_order[i]` loc in `new_order`
+    for i in correct_order:
+        new_idx_order += [new_order.index(i)]
+
+    reordered_vals = []
+    reordered_keys = []
+    for i in range(len(new_idx_order)):
+        reordered_vals += [sorting[new_idx_order[i]]]
+        reordered_keys += [new_order[new_idx_order[i]]]
+
+    assert correct_order == reordered_keys, 'keys not correctly ordered in `fix_order()`'
+    return reordered_vals, reordered_keys
+
+
 def make_merged_list(ind_outputs, gf, rwf):
     # collect the order of output ids in a list
     ind_order = []
@@ -146,18 +179,27 @@ def make_merged_list(ind_outputs, gf, rwf):
         ind_order.append(i[1])
 
     autocorr_array, autocorr_order = dict2array(rwf.autocorr)
+    autocorr_array, autocorr_order = fix_order(ind_order, autocorr_order, autocorr_array)
     assert ind_order == autocorr_order, 'individual and autocorr not in same order'
-    #partial_acorr_array = dict2array(rwf.partial_acorr)
+
     diff_kurtosis_array, diff_kurtosis_order = dictofdict2array(rwf.diff_kurtosis)
+    diff_kurtosis_array, diff_kurtosis_order = fix_order(ind_order, diff_kurtosis_order, diff_kurtosis_array)
     assert ind_order == diff_kurtosis_order, 'individual and diff_kurtosis not in same order'
-    #diff_moving_kurt_array = tripledict2array(rwf.diff_moving_kurt)
+
     avg_moving_speed_array, avg_moving_speed_order = dictofdict2array( gf.avg_moving_speed )
+    avg_moving_speed_array, avg_moving_speed_order = fix_order(ind_order, avg_moving_speed_order, avg_moving_speed_array)
     assert ind_order == avg_moving_speed_order, 'individual and avg_moving_speed not in same order'
+
     time_moving_array, time_moving_order = dictofdict2array( gf.time_moving )
+    time_moving_array, time_moving_order = fix_order(ind_order, time_moving_order, time_moving_array)
     assert ind_order == time_moving_order, 'individual and time_moving not in same order'
+
     turn_list, turn_list_order = tripledict2array(gf.turn_stats)
+    turn_list, turn_list_order = fix_order(ind_order, turn_list_order, turn_list)
     assert ind_order == turn_list_order, 'individual and turn_list not in same order'
+
     theta_list, theta_list_order = tripledict2array(gf.theta_stats)
+    theta_list, theta_list_order = fix_order(ind_order, theta_list_order, theta_list)
     assert ind_order == theta_list_order, 'individual and theta_list not in same order'
 
     merged_list = merge_flat_lists([ind_outputs, diff_kurtosis_array, avg_moving_speed_array, time_moving_array, autocorr_array, turn_list, theta_list])

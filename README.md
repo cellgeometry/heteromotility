@@ -14,7 +14,9 @@ We've posted a pre-print applying `Heteromotility` analysis to quantify dynamic 
 
 ## Installation
 
-Heteromotility can be installed from the Python Package Index with **pip**
+`Heteromotility` depends on `>=python3.6`. The tool will operate using `>=python2.7`, but this is not supported. We recommend the [Anaconda](https://www.anaconda.com/download/#linux) Python distribution.
+
+`Heteromotility` can be installed from the Python Package Index with **pip**
 
     $ pip install heteromotility
 
