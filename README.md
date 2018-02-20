@@ -2,7 +2,7 @@
 
 ## Introduction
 
-`Heteromotility` is a tool for analyzing cell motility in a quantitative manner. `Heteromotility` takes timelapse imaging data as input and calculates 70+ 'motility features' that can be used to generate a 'motility fingerprint' for a given cell. By analyzing more features of cell motility than most common cell tracking methods, `Heteromotility` may be able to identify novel heterogenous motility phenotypes.
+`Heteromotility` is a tool for analyzing cell motility in a quantitative manner. `Heteromotility` takes cell tracking data as input and calculates 70+ *motility features* that can be used to generate a "motility fingerprint" for a given cell. By analyzing more features of cell motility than most common cell tracking methods, `Heteromotility` may be able to identify novel heterogenous motility phenotypes.
 
 `Heteromotility` also contains a suite of tools to quantify and visualize cell state spaces, and dynamic state transitions within the state space. While these tools were developed for use with `Heteromotility` features, they may be applied to any arbitrary time-series feature set.
 
@@ -13,6 +13,10 @@ We have a recent paper in *PLoS Computational Biology* using `Heteromotility` an
 [Inferring cell state by quantitative motility analysis reveals a dynamic state system and broken detailed balance](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005927)
 
 We also have videos of Heteromotility analysis in action in multiple cell types on our [lab website's Heteromotility page](https://cellgeometry.ucsf.edu/heteromotility).
+
+## Documentation
+
+For tutorials and complete API documentation, please see [Heteromotility on Read the Docs](https://heteromotility.readthedocs.io/).
 
 ## Installation
 
@@ -77,40 +81,41 @@ The general method to calculate motility statistics is:
 
 *Pickled Cell Paths*
 
-    $ heteromotility . output_path/ --exttrack path/to/object_paths.pickle
+    $ heteromotility output_path/ --exttrack path/to/object_paths.pickle
 
 *Tracks X and Y in CSVs*
 
-    $ heteromotility . output_path/ --tracksX path/to/tracksX.csv --tracksY path/to/tracksY.csv
+    $ heteromotility output_path/ --tracksX path/to/tracksX.csv --tracksY path/to/tracksY.csv
 
 Both methods will output a CSV named `motility_statistics.csv` in the specified output directory, formatted with features as columns and samples as rows.  
 The optional argument `--output_suffix` can be used to add a suffix to the output CSV.
 
-    $ heteromotility path_to_input_csvs/ ./
+    $ heteromotility /path/to/output_dir
     $ ls
     motility_statistics.csv
-    $ heteromotility path_to_input_csvs/ ./ --output_suffix TEST_SUFFIX
-    $ ls
+    $ heteromotility /path/to/output_dir --output_suffix TEST_SUFFIX
+    $ ls /path/to/output_dir
     motility_statistics.csv motility_statistics_TEST_SUFFIX.csv
 
 ## Demo
 
 As a demonstration, simulated cell paths are provided for multiple models of motion in the `demo/` directory. These paths are saved as Python pickle objects.
 
-To calculate Heteromotility features for a simulated path, simply run the following. (**Note:** Assumes `heteromotility` is present as an alias, as described above.)
+To calculate Heteromotility features for a simulated path, simply run the following.
 
-    $ heteromotility ./ demo/sim_XYZ/ --exttrack demo/sim_XYZ/sim_XYZ.pickle
+    $ heteromotility demo/sim_XYZ/ --exttrack demo/sim_XYZ/sim_XYZ.pickle
 
 ## Split Motility Path Calculation
 
 Heteromotility supports splitting an object's path into multiple subpaths and calculating features for each subpath. This is useful to investigate changes in an object's motility over time. This feature is triggered with the `--detailedbalance` command line flag, followed by an integer specifying the minimum number of path steps to consider. Heteromotility will calculate features for every subpath of the minimum length, and every possible length up to 1/2 the total length of the supplied path.  
+
 **Note:** Subpaths have a minimum length of 20 steps, as multiple `Heteromotility` features rely upon regression analyses that are confounded by exceedingly small path lengths.
 
 This feature is executed like so:
 
-    $ heteromotility /path/to/csvs /output/path/ --detailedbalance 20
+    $ heteromotility /output/path/ --tracksX /path/to/tracksX.csv --tracksY /path/to/tracksY.csv --detailedbalance 20
 
-where the integer 20 can be replaced by your desired minimum path length.
+where the integer `20` can be replaced by your desired minimum path length.
 
 The resulting output files will be named `motility_statistics_split_LENGTH.csv` where `LENGTH` is the subpath size for those features. Importantly, the `cell_ids` column will now contain additional information. In addition to the unique cell identifier, `cell_ids` will contain a dash `-` following the identifier with subpath number, indexed beginning at `0`. The format appears:
 
