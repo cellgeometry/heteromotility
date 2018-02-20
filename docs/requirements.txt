@@ -1,5 +1,11 @@
+numpy==1.14.0
+pandas==0.20.3
+Pillow==4.2.1
+scipy==1.0.0
+Sphinx==1.6.7
 sphinx-argparse==0.2.1
 sphinx-autobuild==0.7.1
 sphinx-rtd-theme==0.2.4
 sphinxcontrib-programoutput==0.11
 sphinxcontrib-websupport==1.0.1
+statsmodels==0.8.0
