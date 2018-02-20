@@ -1,0 +1,308 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Motility Feature Quantification &mdash; Heteromotility 0.1.8 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Heteromotility 0.1.8 documentation" href="../index.html"/>
+        <link rel="up" title="Tutorial" href="index.html"/>
+        <link rel="next" title="Subpath Analysis" href="subpathquant.html"/>
+        <link rel="prev" title="Tutorial" href="index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Heteromotility
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Motility Feature Quantification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#input-data-format">Input Data Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#feature-extraction">Feature Extraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-data-format">Output Data Format</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="subpathquant.html">Subpath Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clustering.html">Unsupervised Clustering</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../fullapi/index.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Heteromotility</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Tutorial</a> &raquo;</li>
+        
+      <li>Motility Feature Quantification</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/tutorial/featurequant.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="motility-feature-quantification">
+<h1>Motility Feature Quantification<a class="headerlink" href="#motility-feature-quantification" title="Permalink to this headline">¶</a></h1>
+<p>Heteromotility feature quantification can be performed on the full length of a
+cell’s path, or along subpaths. This tutorial document describes how to quantify
+features across the entire track length, <code class="docutils literal"><span class="pre">heteromotility</span></code>’s default behavior.</p>
+<p>Simulated random walks and Levy fliers have been provided in the <code class="docutils literal"><span class="pre">demo/</span></code> directory
+of the <a class="reference external" href="https://github.com/cellgeometry/heteromotility">Github page</a>.</p>
+<div class="section" id="input-data-format">
+<h2>Input Data Format<a class="headerlink" href="#input-data-format" title="Permalink to this headline">¶</a></h2>
+<p>Track input formats may take one of the following two forms:</p>
+<p><strong>Tracks X and Y CSV</strong></p>
+<p>Heteromotility accepts object paths as <code class="docutils literal"><span class="pre">N</span> <span class="pre">x</span> <span class="pre">T</span></code> CSVs, where <code class="docutils literal"><span class="pre">N</span></code> is the number
+of samples and <code class="docutils literal"><span class="pre">T</span></code> is the number of time steps. One CSV encodes an object’s
+position in the <code class="docutils literal"><span class="pre">X</span></code> dimension, and another in the <code class="docutils literal"><span class="pre">Y</span></code> dimension.</p>
+<p>Each row describes a single sample, and each column contains the objects
+position in the <code class="docutils literal"><span class="pre">X</span></code> or <code class="docutils literal"><span class="pre">Y</span></code> dimension at the corresponding time step, ordered <code class="docutils literal"><span class="pre">0</span></code>
+to <code class="docutils literal"><span class="pre">T</span></code>, left to right.</p>
+<p>For instance, <code class="docutils literal"><span class="pre">tracksX.csv</span></code> may contain the following:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="m">0</span>, <span class="m">5</span>, <span class="m">4</span>, <span class="m">5</span>, <span class="m">7</span>, <span class="m">5</span>, <span class="m">10</span>, ...
+<span class="m">38</span>, <span class="m">51</span>, <span class="m">42</span>, <span class="m">38</span>, <span class="m">41</span>, <span class="m">43</span>, ...
+</pre></div>
+</div>
+<p>and likewise for <code class="docutils literal"><span class="pre">tracksY.csv</span></code>.</p>
+<p><strong>Pickled Cell Paths Object</strong></p>
+<p>Heteromotility also accepts a pickled Python dictionary of object paths as an
+input. The dictionary should be keyed by a unique object identifier (i.e.
+numbers, names), with each key corresponding to a sequential list of XY-point</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">object_paths</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">obj1</span> <span class="p">:</span> <span class="p">[(</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">),</span> <span class="p">(</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">),</span> <span class="p">(</span><span class="n">x3</span><span class="p">,</span><span class="n">y3</span><span class="p">)</span><span class="o">...</span><span class="p">],</span>
+                <span class="n">obj2</span> <span class="p">:</span> <span class="p">[(</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">),</span> <span class="p">(</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">),</span> <span class="p">(</span><span class="n">x3</span><span class="p">,</span><span class="n">y3</span><span class="p">)</span><span class="o">...</span><span class="p">],</span>
+                <span class="o">...</span>
+                <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="feature-extraction">
+<h2>Feature Extraction<a class="headerlink" href="#feature-extraction" title="Permalink to this headline">¶</a></h2>
+<p>Simulation data provided in <code class="docutils literal"><span class="pre">demo/</span></code> are formated as CSVs, as outlined above.</p>
+<p>To extract features, simply call <code class="docutils literal"><span class="pre">heteromotility</span></code> from the command line, specifying an
+<code class="docutils literal"><span class="pre">output_path</span></code>, as well as locations for <code class="docutils literal"><span class="pre">--tracksX</span></code> and <code class="docutils literal"><span class="pre">tracksY</span></code>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>heteromotility demo/ --tracksX demo/rw_x.csv --tracksY demo/rw_y.csv
+</pre></div>
+</div>
+<p>By default, <code class="docutils literal"><span class="pre">heteromotility</span></code> will export a CSV named <code class="docutils literal"><span class="pre">motility_statistics.csv</span></code> to the specified
+<code class="docutils literal"><span class="pre">output_path</span></code> (the first CLI argument). The output name can be altered with the <code class="docutils literal"><span class="pre">--output_suffix</span></code> flag.</p>
+</div>
+<div class="section" id="output-data-format">
+<h2>Output Data Format<a class="headerlink" href="#output-data-format" title="Permalink to this headline">¶</a></h2>
+<p>The output data is an <code class="docutils literal"><span class="pre">N</span> <span class="pre">x</span> <span class="pre">M+2</span></code> matrix, where <code class="docutils literal"><span class="pre">N</span></code> is the number of input
+paths and <code class="docutils literal"><span class="pre">M</span></code> is the number of <code class="docutils literal"><span class="pre">heteromotility</span></code> features, currently <code class="docutils literal"><span class="pre">M</span> <span class="pre">=</span>
+<span class="pre">79</span></code> using default settings. There are two <code class="docutils literal"><span class="pre">id</span></code> variables in the first two
+columns of the matrix: <code class="docutils literal"><span class="pre">Well/XY</span></code> specifying the output directory, and
+<code class="docutils literal"><span class="pre">cell_id</span></code> specifying the internal unique <code class="docutils literal"><span class="pre">id</span></code> provided to a particular
+track.</p>
+<p>In static analysis mode, <code class="docutils literal"><span class="pre">cell_id</span></code> is simply an integer, <code class="docutils literal"><span class="pre">[0,</span> <span class="pre">N]</span></code>.
+<code class="docutils literal"><span class="pre">Well/XY</span></code> is useful for determining cell provenance when multiple output CSVs
+have been concatenated together.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="subpathquant.html" class="btn btn-neutral float-right" title="Subpath Analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Jacob C. Kimmel.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.8',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,309 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Subpath Analysis &mdash; Heteromotility 0.1.8 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Heteromotility 0.1.8 documentation" href="../index.html"/>
+        <link rel="up" title="Tutorial" href="index.html"/>
+        <link rel="next" title="Unsupervised Clustering" href="clustering.html"/>
+        <link rel="prev" title="Motility Feature Quantification" href="featurequant.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Heteromotility
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="featurequant.html">Motility Feature Quantification</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Subpath Analysis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpath-feature-extraction">Subpath Feature Extraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-data-format">Output Data Format</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clustering.html">Unsupervised Clustering</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../fullapi/index.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Heteromotility</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Tutorial</a> &raquo;</li>
+        
+      <li>Subpath Analysis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/tutorial/subpathquant.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="subpath-analysis">
+<h1>Subpath Analysis<a class="headerlink" href="#subpath-analysis" title="Permalink to this headline">¶</a></h1>
+<p>Heteromotility’s feature quantification tool may also be applied to <strong>subpaths</strong>
+within the full time series. This is useful to quantify motility state transitions
+within individual cells.</p>
+<div class="section" id="subpath-feature-extraction">
+<h2>Subpath Feature Extraction<a class="headerlink" href="#subpath-feature-extraction" title="Permalink to this headline">¶</a></h2>
+<p>Subpath analysis is performed using the <code class="docutils literal"><span class="pre">--detailedbalance</span></code> CLI flag in the
+<code class="docutils literal"><span class="pre">heteromotility</span></code> tool. The argument following <code class="docutils literal"><span class="pre">--detailedbalance</span></code> is an
+integer specifying the smallest length <span class="math">\(\tau\)</span> of each <strong>subpath</strong> to
+analyze. <code class="docutils literal"><span class="pre">heteromotility</span></code> will calculate features for all <strong>subpaths</strong> between
+this argument and <code class="docutils literal"><span class="pre">T</span> <span class="pre">=</span> <span class="pre">total_length//2</span></code>. This behavior can be suppresed by
+supplying a maximum <strong>subpath</strong> size to consider with <code class="docutils literal"><span class="pre">--dbmax</span></code>.</p>
+<p>Here, <code class="docutils literal"><span class="pre">`--detailedbalance</span> <span class="pre">20</span> <span class="pre">--dbmax</span> <span class="pre">20</span></code> specifies analysis of only subpaths
+exactly <span class="math">\(\tau = 20\)</span> time units in length.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>heteromotility demo/ --tracksX demo/rw_x.csv --tracksY demo/rw_y.csv --detailedbalance <span class="m">20</span> --dbmax <span class="m">20</span>
+</pre></div>
+</div>
+<p>By default, <code class="docutils literal"><span class="pre">heteromotility</span></code> splits paths without any overlap, and places them
+directly adjacent to one another in the time series.</p>
+<p><strong>Default Path Splitting Behavior</strong></p>
+<a class="reference internal image-reference" href="../_images/default_path_split.png"><img alt="default path splitting diagram" class="align-center" src="../_images/default_path_split.png" style="width: 600px; height: 200px;" /></a>
+<p><code class="docutils literal"><span class="pre">heteromotility</span></code> also supports the use of <strong>sliding windows</strong>, splitting the full length
+track into paths that differ only by a stride <span class="math">\(\Delta\)</span>. This behavior is invoked with the
+<code class="docutils literal"><span class="pre">--sliding_window</span></code> flag, which specifies the size of the stride <span class="math">\(\Delta\)</span> with an integer.</p>
+<p>Here, <code class="docutils literal"><span class="pre">--detailedbalance</span> <span class="pre">20</span> <span class="pre">--dbmax</span> <span class="pre">20</span> <span class="pre">--sliding_window</span> <span class="pre">3</span></code> specifies analysis of <strong>subpaths</strong>
+length <span class="math">\(\tau = 20\)</span> with stride <span class="math">\(\Delta = 3\)</span>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>heteromotility demo/ <span class="se">\</span>
+  --tracksX demo/rw_x.csv --tracksY demo/rw_y.csv <span class="se">\</span>
+  --detailedbalance <span class="m">20</span> <span class="se">\</span>
+  --dbmax <span class="m">20</span> <span class="se">\</span>
+  --sliding_window <span class="m">3</span>
+</pre></div>
+</div>
+<p><strong>Sliding Window Path Splitting Behavior</strong></p>
+<a class="reference internal image-reference" href="../_images/sliding_path_split.png"><img alt="sliding window path splitting diagram" class="align-center" src="../_images/sliding_path_split.png" style="width: 600px; height: 200px;" /></a>
+</div>
+<div class="section" id="output-data-format">
+<h2>Output Data Format<a class="headerlink" href="#output-data-format" title="Permalink to this headline">¶</a></h2>
+<p>Output statistics are saved in <code class="docutils literal"><span class="pre">motility_statistics_split_TAU.csv</span></code>, where <code class="docutils literal"><span class="pre">TAU</span></code> is the size
+of subpaths analyzed. The CSV has the same format as the static analysis export, with one key difference.</p>
+<p>The <code class="docutils literal"><span class="pre">cell_id</span></code> column will now specify unique <code class="docutils literal"><span class="pre">cell_ids</span></code> as integers, as well
+as the order of subpaths for each cell, separated by <code class="docutils literal"><span class="pre">-</span></code>.</p>
+<p>For instance, for a path with total length <code class="docutils literal"><span class="pre">T</span> <span class="pre">=</span> <span class="pre">80</span></code>, analysed with
+<strong>subpaths</strong> length <span class="math">\(tau = 20\)</span>, the <code class="docutils literal"><span class="pre">cell_ids</span></code> column would appear as
+follows:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>cell_ids ...
+obj0-0 ...
+obj0-1 ...
+obj0-2 ...
+obj0-3 ...
+obj1-1 ...
+obj1-2 ...
+...
+</pre></div>
+</div>
+<p>In this example, statistics associated with <code class="docutils literal"><span class="pre">0-0</span></code> are from the first subpath
+(<code class="docutils literal"><span class="pre">0</span></code>) of the first tracked cell <code class="docutils literal"><span class="pre">0</span></code>. Statistics associated with <code class="docutils literal"><span class="pre">0-1</span></code> are
+from the second subpath (<code class="docutils literal"><span class="pre">1</span></code>) of the same cell <code class="docutils literal"><span class="pre">0</span></code>, and so on.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="clustering.html" class="btn btn-neutral float-right" title="Unsupervised Clustering" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="featurequant.html" class="btn btn-neutral" title="Motility Feature Quantification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Jacob C. Kimmel.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.8',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='heteromotility',
-      version='0.1.7',
+      version='0.1.9',
       description='Quantitative analysis of biological motion',
       url='http://github.com/jacobkimmel/heteromotility',
       author='Jacob Kimmel',

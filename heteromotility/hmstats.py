@@ -1,23 +1,9 @@
 '''
-#---------------------------
-# MODULE CONTENTS
-#---------------------------
-Functions to/for:
 1. Calculate general motility features (average speed, distance, ...)
 2. Calculate features related to mean squared displacement
 3. Calculate features related to random walk similarity
-
-#---------------------------
-# To Do
-#---------------------------
-
-1. Complete displacement properties statistics
-2. Add transforms for time-series analysis of displacements
-3. WT-DFA
 '''
-#------------------------------
-# GENERAL MOTILITY STATISTICS
-#------------------------------
+
 from __future__ import division, print_function
 import numpy as np
 import math
@@ -26,7 +12,7 @@ from scipy import interpolate
 from statsmodels.tsa.stattools import acf, pacf
 
 def average_xy( coor1, coor2 ):
-    # Find the average x and y of an XY point
+    '''Finds the average value of two XY coordinates'''
     x1 = float(coor1[0])
     x2 = float(coor2[0])
     y1 = float(coor1[1])
@@ -34,15 +20,81 @@ def average_xy( coor1, coor2 ):
 
     x3 = (x1 + x2) * 0.50
     y3 = (y1 + y2) * 0.50
+    return (x3, y3)
+
 def distance( coor1, coor2 ):
-    # Calculates euclidean distance
+    '''Euclidean distance'''
     x1, y1 = coor1
     x2, y2 = coor2
     d = math.sqrt( (x2-x1)**2.00 + (y2-y1)**2.00)
     return d
 
-class GeneralFeatures:
-    def __init__(self, cell_ids, move_thresh = 10):
+class GeneralFeatures(object):
+    '''
+    Calculates features of speed, distance, path shape, and turning behavior.
+
+    Attributes
+    ----------
+    cell_ids : dict
+        keyed by cell ids, values are lists of coordinate tuples.
+    moving_tau : int
+        threshold for movement
+    tau_range : iterable, ints
+        range of window sizes to use to establish cell direction by regression.
+    interval_range : iterable, ints
+        range of time intervals to use between a cell's current and 'next'
+        direction when calculating turning features.
+    total_distance : dict
+        total distance each cell travels.
+        keyed by cell id, values are floats.
+    net_distance : dict
+        net distance each cell traveled, dist(final_pos - init_pos)
+        keyed by cell id, values are floats.
+    linearity : dict
+        Pearson's r**2 linearity metric on cell paths.
+        keyed by cell id, values are floats.
+    spearmanrsq : dict
+        Spearman's rho**2 monotonicity metric on cell paths.
+        keyed by cell id, values are floats.
+    progressivity : dict
+        net_distance/total_distance, metric of directional persistence.
+        keyed by cell id, values are floats.
+    min_speed : dict
+        minimum cell speed.
+        keyed by cell id, values are floats.
+    max_speed : dict
+        maximum cell speed.
+        keyed by cell id, values are floats.
+    avg_moving_speed : dict
+        average moving speed above a certain threshold speed,
+        defined as the movement cutoff.
+        useful to deconfound the cell's average speed while moving from the
+        dwell time in an immotile state.
+        keyed by threshold, values are dicts keyed by cell id, valued with floats.
+    time_moving : dict
+        proportion of time spent moving above a certain threshold speed,
+        defined as the movement cutoff.
+        keyed by threshold, values are dicts keyed by cell id, valued with floats.
+    turn_stats : dict
+        proportion of the time a cell turns to the right of its past direction.
+        useful to determine directional bias.
+        keyed by `tau` from `tau_range`, values are dicts keyed by `interval` from `interval_range`.
+        final dicts have float values, [0, 1].
+    theta_stats : dict
+        average turning angle magnitude.
+        keyed by `tau` from `tau_range`, values are dicts keyed by `interval` from `interval_range`.
+        final dicts have float values, [0, 1].
+    '''
+    def __init__(self, cell_ids, move_thresh = 5):
+        '''
+
+        Parameters
+        ----------
+        cell_ids : dict
+            keyed by cell ids, values are lists of coordinate tuples.
+        move_thresh : int
+            time interval to use when calculating `avg_moving_speed`, `time_moving`
+        '''
         self.cell_ids = cell_ids
         if len(cell_ids[list(cell_ids)[0]]) > 19:
             self.moving_tau = move_thresh
@@ -60,16 +112,10 @@ class GeneralFeatures:
         self.spearmanrsq = self.calc_spearman(self.cell_ids)
         self.progressivity = self.calc_progressivity(self.cell_ids, net_distance=self.net_distance, total_distance=self.total_distance)
         self.min_speed, self.max_speed = self.calc_minmax_speed(self.cell_ids)
-        self.moving_tau = 5
         self.avg_moving_speed, self.time_moving = self.calc_moving_variable_threshold(cell_ids, thresholds = range(1,11), tau = self.moving_tau)
 
         self.turn_stats, self.theta_stats = self.all_turn_stats(cell_ids, tau_range = self.tau_range, interval_range = self.interval_range)
 
-    # Calculate total distance traveled and save each cell's stat
-    # as a float in a list total_distance
-    # Calculates distance b/w each pair of points, adds to a temp
-    # list traveled and then takes the sum as the total distance
-    # Also calculates average speed in px/hour as mean_speed
     def calc_total_distance(self, cell_ids):
         total_distance = {}
         avg_speed = {}
@@ -210,34 +256,32 @@ class GeneralFeatures:
 
         return avg_moving_speed, time_moving
 
-    #------------------------------
-    # TURNING STATISTICS
-    #------------------------------
-
     def turn_direction(self, cell_path, tau = 10, interval = 5):
         '''
-        Returns the proportion of time a cell turns left as float 0.0-1.0
+        Returns the proportion of time a cell turns left as float 0.0-1.0.
 
         Parameters
-        ------------
-        cell_path : list containing a timeseries of tuples,
-                    each tuple holding an XY position
-                    i.e. cell_path = [(x1,y1), (x2,y2)...(xn,yn)]
-        tau       : integer indicating the desired time lag between a point of
-                    interest and a point in the distance (p_n+tau) to determine
-                    a cell's turning behavior. Must be > interval
-        interval  : integer representing the number of points ahead and behind
-                    the point of interest to consider when find a regression
-                    line to represent the cell's direction at p_n
+        -----------
+        cell_path : list
+            timeseries of tuples, each tuple holding an XY position
+            i.e. cell_path = [(x1,y1), (x2,y2)...(xn,yn)]
+        tau : int
+            desired time lag between a point of
+            interest and a point in the distance (p_n+tau) to determine
+            a cell's turning behavior. Must be > `interval`.
+        interval  : int
+            number of points ahead and behind the point of interest to consider
+            when find a regression line to represent the cell's direction at p_n.
 
         Returns
-        ------------
-        turns     : tuple of binaries reflecting turns left (0) or right (1)
-        thetas       : angles of each turn in radians
+        -------
+        turns  : list
+            binaries reflecting turns left (0) or right (1)
+        thetas : list
+            angles of each turn in radians
 
-
-        Principle
-        ------------
+        Notes
+        -----
         (1) Estabish direction of object at p_n:
         Given a time series XY of x,y coordinates, where p_t denotes a point
         at time t, take a given point p_n
@@ -262,13 +306,10 @@ class GeneralFeatures:
 
             theta = arccos( v1 dot v2 / ||v1|| * ||v2||)
 
-        Notable Behavior
-        ------------
-        If a cell moves in a perfectly straight line, such that point of
+        N.B. If a cell moves in a perfectly straight line, such that point of
         interest p_n has x coordinate == p_n+tau, the function skips this p_n
         i.e. Skips if the cell has moved in a perfectly linear line, or circled
         back on itself
-
         '''
         if tau < interval:
             print('tau must be > interval')
@@ -344,24 +385,29 @@ class GeneralFeatures:
         else:
             return turns, thetas
 
-    def all_turn_stats( self, cell_ids, tau_range = range(9,12), interval_range = range(5,7)):
+    def all_turn_stats(self, cell_ids,
+                        tau_range = range(9,12), interval_range = range(5,7)):
         '''
         Parameters
         ----------
-        cell_ids       : dict of lists containing tuples, each tuple an xy point at
-                         a given timepoints
-        tau_range      : range of time lags to try for calculation
-        interval_range : range of interval distances to use for calculation of
-                         the linregress about point of interest p_n
+        cell_ids : dict
+            keyed by cell id, values are lists of tuple coordinates.
+        tau_range : iterable
+            range of time lags to try for calculation.
+        interval_range : iterable
+            range of interval distances to use for calculation of
+            the linregress about point of interest p_n.
 
         Returns
         ----------
-        turn_stats     : dict keyed by tau, containing dict keyed by interval,
-                         containing dict keyed by cell, containing proportion of
-                         time a cell turns right
-        theta_stats    : dict keyed by tau, containing dict keyed by interval,
-                         containing dict keyed by cell, containing a list of
-                         three elements [avg_theta, min_theta, max_theta]
+        turn_stats : dict
+            keyed by tau, containing dict keyed by interval,
+            containing dict keyed by cell, containing proportion of
+            time a cell turns right
+        theta_stats : dict
+            keyed by tau, containing dict keyed by interval,
+            containing dict keyed by cell, containing a list of
+            three elements [avg_theta, min_theta, max_theta]
         '''
         turn_stats = {}
         theta_stats = {}
@@ -380,41 +426,57 @@ class GeneralFeatures:
                     theta_stats[tau][interval][u] = ts
         return turn_stats, theta_stats
 
+class MSDFeatures(object):
+    '''
+    Calculates mean squared displacement related features.
 
+    Attributes
+    ----------
+    cell_ids : dict
+        keyed by cell ids, values are lists of coordinate tuples.
+    msd_distributions : dict
+        MSDs for each cell across a range of time lags `tau`.
+        keyed by cell ids, values are lists of floats.
+    log_distributions : dict
+        log transform of `msd_distributions`.
+        keyed by cell ids, values are lists of floats.
+    alphas : dict
+        alpha exponent for each cells motion.
+        keyed by cell ids, values are floats.
 
-#--------------------------------
-#     MEAN SQUARE DISPLACEMENT
-#--------------------------------
+    Notes
+    -----
+    MSD(tau) = (1 / tau) * sum( (x(t + tau) + x(t))^2 )
 
-# MSD(tau) = (1 / tau) * sum( (x(t + tau) + x(t))^2 )
-# Plotting a distribution of Tau vs MSD will generate a curve
-# The exponential nature of this curve will describe the type
-# of motion the particle is experiencing
-# 1 < alpha --> impeded diffusion
-# Linear curve (alpha = 1) --> diffusion
-# 1 < alpha < 2 --> super diffusion
-# alpha = 2 --> ballistic motion
+    Plotting a distribution of Tau vs MSD will generate a curve.
+    The exponential nature of this curve will describe the type
+    of motion the particle is experiencing.
 
-class MSDFeatures:
+    1 < alpha --> impeded diffusion
+    Linear curve (alpha = 1) --> diffusion
+    1 < alpha < 2 --> super diffusion
+    alpha = 2 --> ballistic motion
+    '''
     def __init__(self, cell_ids):
         self.msd_distributions, self.log_distributions = self.msd_dist_all_cells(cell_ids, tau = 31)
         self.alphas = self.calc_alphas(self.log_distributions)
 
-    # Calculate the mean square displacement for a given tau value
-    # across all timepoints of a tracked object
     def calc_msd(self, path, tau):
         '''
         Calculates mean squared displacement for a cell path
         for a given time lag tau
 
         Parameters
-        -------------------
-        path : list containing tuples of sequential XY coordinates
-        tau  : time lag to consider when calculating MSD
+        ----------
+        path : list
+            tuples of sequential XY coordinates.
+        tau  : int
+            time lag to consider when calculating MSD.
 
         Returns
-        -------------------
-        msd : mean squared displacement of path given time lag tau
+        -------
+        msd : float
+            mean squared displacement of path given time lag tau.
         '''
         distances = []
         t = 0
@@ -427,29 +489,32 @@ class MSDFeatures:
 
         return msd
 
-    # Calculate the MSD distribution for a given range of tau's
     def calc_msd_distribution(self, path, max_tau):
         '''
         Calculates the distribution of MSDs for a range of time
-        lag values tau
+        lag values tau.
 
         Parameters
-        -------------------
-        path : list of tuples containing sequential XY coordinates
-        max_tau : maximum time lag to consider for MSD calculation
+        ----------
+        path : list
+            tuples containing sequential XY coordinates.
+        max_tau : int
+            maximum time lag `tau` to consider for MSD calculation.
 
         Returns
-        -------------------
-        distribution : MSDs in a list, indexed by tau
-        log_distribution : log transform of distribution
+        -------
+        distribution : list
+            MSDs indexed by `tau`.
+        log_distribution : list
+            log transform of `distribution`.
 
-        Notable Behavior
-        -------------------
+        Notes
+        -----
         If a cell is stationary indefinitely, it effectively has
-        a MSD of 0
+        a MSD of `0`.
         However, this calls a math domain error, so checks are in
-        place that ensure the final 'alpha' calculation will be
-        0 without raising exceptions
+        place that ensure the final `alpha` calculation will be
+        0 without raising exceptions.
 
         Here -- returns both distributions as a string 'flat' if
         MSD calc is 0 for a given range tau
@@ -470,8 +535,6 @@ class MSDFeatures:
 
         return distribution, log_distribution
 
-    # Calculate the MSD distribution for all cells in the cell_ids
-    # dicts. Return distributions and log distributions in seperate dicts
     def msd_dist_all_cells(self, cell_ids, tau = 31):
         '''
         Calculates MSD distributions for all cells in dict cell_ids
@@ -521,17 +584,19 @@ class MSDFeatures:
         log(MSD) v log(tau) plot
 
         Parameters
-        -----------------
-        log_distributions : dict keyed by cell_id containing lists
-        of log transformed MSDs, indexed by tau
+        ----------
+        log_distributions : dict
+            keyed by cell_id containing lists of log transformed MSDs,
+            indexed by tau
 
         Returns
-        ----------------
-        alphas : dict keyed by cell_id, with values as the alpha coeff
-                 from log(MSD(tau)) = alpha*log(tau)
+        -------
+        alphas : dict
+            keyed by cell_id, with values as the alpha coeff
+            from log(MSD(tau)) = alpha*log(tau)
 
-        Notable Behavior
-        ----------------
+        Notes
+        -----
         Checkes if log_distributions[cell_id] is == 'flat'
         If so, sets alpha at the appropriate "flat" slope of 0
         '''
@@ -550,9 +615,11 @@ class MSDFeatures:
 
         return alphas
 
-    # Plots tau vs MSD and log(tau) vs log(MSD)
-    # Saves as a PDF in the motility_statistics output folder
-    def plot_msd_dists(self, output_dir, msd_distributions, log_distributions):
+    def _plot_msd_dists(self, output_dir, msd_distributions, log_distributions):
+        '''
+        Plots tau vs MSD and log(tau) vs log(MSD)
+        Saves as a PDF in the motility_statistics output folder
+        '''
 
         tau = range(1,31)
         log_tau = []
@@ -577,42 +644,84 @@ class MSDFeatures:
         plt.subplots_adjust(wspace = 0.2) # increasing spacing b/w subplots
 
         plt.savefig(str(output_dir + 'MSD_Plots.pdf'))
+        return
 
-#--------------------------------
-# RANDOM WALK MODELING
-#--------------------------------
-
-class RWFeatures:
+class RWFeatures(object):
     '''
-    Calculates features:
-    * comparing properties of a cell's displacement distribution to RWs vs.
-      more long-tailed distributions, indicative of Levy flight like motion
-    * comparing a cell to random walk simulations of motion
-    * estimating self-similarity metrics
+    Calculates features relative to a random walk and self-similarity measures.
 
+    Attributes
+    ----------
+    cell_ids : dict
+        keyed by cell ids, values are lists of coordinate tuples.
+    gf : hmsims.GeneralFeatures object.
+    diff_linearity : dict
+        difference in linearity r**2 between observed cell and a random walk.
+        keyed by cell ids, values are floats.
+    diff_net_dist : dict
+        difference in net distance between an observed cell and a random walk.
+        keyed by cell ids, values are floats.
+    cell_kurtosis : dict
+        measured displacement distribution kurtosis.
+        keyed by cell ids, values are floats.
+    diff_kurtosis : dict
+        difference between `cell_kurtosis` and a random walk kurtosis.
+        keyed by cell ids, values are floats.
+    nongaussalpha : dict
+        non-Gaussian parameters alpha_2 of the displacement distribution.
+        keyed by cell ids, values are floats.
+    disp_var : dict
+        variance of the displacement distribution.
+        keyed by cell ids, values are floats.
+    hurst_RS : dict
+        Hurst coefficients of the displacement time series, as estimated by
+        Mandelbrot's original Rescaled Range method.
+        keyed by cell ids, values are floats.
+    autocorr_max_tau : int
+        maximum tau for autocorrelation calculation.
+    autocorr : dict
+        autocorrelation coefficients for displacement time series.
+        keyed by cell ids, values are floats.
     '''
-    def __init__(self, cell_ids, gf, pacorr_max = False): # gf = GeneralFeatures
+    def __init__(self, cell_ids, gf):
+        '''
+        Calculates features relative to a random walk and self-similarity measures.
+
+        Parameters
+        ----------
+        cell_ids : dict
+            keyed by cell ids, values are lists of coordinate tuples.
+        gf : hmsims.GeneralFeatures object.
+        '''
+        self.cell_ids = cell_ids
+        self.gf = gf
+
         self.diff_linearity, self.diff_net_dist = self.run_comparative_randwalk(cell_ids, gf.linearity, gf.net_distance, gf.avg_speed)
         self.cell_kurtosis, self.diff_kurtosis = self.vartau_kurtosis_comparison(cell_ids, max_tau = 10)
-        #self.moving_range = range(1,11)
-        #self.cell_moving_kurt, self.diff_moving_kurt = self.moving_kurt(cell_ids, max_tau = 10, moving_range = self.moving_range)
+
         self.nongaussalpha = self.nongauss_coeff(cell_ids)
         self.disp_var, self.disp_skew = self.displacement_props(cell_ids)
         self.hurst_RS = self.hurst_mandelbrot(cell_ids)
         self.autocorr_max_tau = 11
         self.autocorr, self.qstats, self.pvals = self.autocorr_all(cell_ids, max_tau = self.autocorr_max_tau)
-        #if pacorr_max != False:
-        #    self.partial_acorr = self.partial_acorr_all(cell_ids, max_tau = pacorr_max)
-        #else:
-        #    self.partial_acorr = self.partial_acorr_all(cell_ids, max_tau = self.autocorr_max_tau)
-        #self.hurst_dfa = self.dfa_all(cell_ids)
 
-    # Creates a random walk model, given an origin point, N number of steps
-    # and a defined rate of motion per step
-    # Exports list of the model_path, values for model net distance & linearity
     def random_walk(self, origin, N, speed_mu, speed_sigma = None):
-        import numpy as np
         '''
+        Parameters
+        ----------
+        origin : starting point for the model
+        N      : number of steps to model
+        speed_mu : mean speed for the model
+        speed_sigma : stdev of the normal distribution for step sizes
+
+        Returns
+        -------
+        model_net_dist : float
+        model_linearity : float
+        model_path : list
+
+        Notes
+        -----
         Net distance of random walks is based on
         tau = time_unit
         rate = sigma = step_size = time_unit * velocity_x
@@ -625,13 +734,6 @@ class RWFeatures:
         step_size = rate = c = sqrt(x_step^2 + y_step^2) = sqrt(2*step^2)
         x_step = y_step = rate/sqrt(2)
         (Random Walks in Biology, 1992, Howard C. Berg)
-
-        Parameters
-        ------------------
-        origin : starting point for the model
-        N      : number of steps to model
-        speed_mu : mean speed for the model
-        speed_sigma : stdev of the normal distribution for step sizes
         '''
         model_net_dist = math.sqrt(2) * speed_mu * math.sqrt( N )
         model_path = [ origin ]
@@ -671,11 +773,11 @@ class RWFeatures:
 
         return model_net_dist, model_linearity, model_path
 
-    # Where cell is a list of (x,y) tuple-coordinates denoting the cell path
-    # u is the key of the cell in all data dicts
-    # executes a random walk model with the cell's given rate and timescale
-    # returns differences between the model and the actual cell
     def compare_to_randwalk(self, cell, u, cell_linearity, cell_net_dist, cell_avg_speed):
+        '''
+        Compares an observed path to a simulated random walk with the
+        same displacement mean
+        '''
         origin = cell[0]
         N = len(cell)
         rate = cell_avg_speed
@@ -698,6 +800,7 @@ class RWFeatures:
         return diff_linearity, diff_net_dist
 
     def run_comparative_randwalk(self, cell_ids, linearity, net_distance, avg_speed):
+        '''Runs comparisons to random walks for all cells in `cell_ids`'''
         diff_linearity = {}
         diff_net_dist = {}
         for u in cell_ids:
@@ -708,8 +811,8 @@ class RWFeatures:
 
         return diff_linearity, diff_net_dist
 
-    # Makes a list containing cell displacements for a variable time scale, tau
     def make_displacement_dist(self, cell_ids, tau):
+        '''Generates displacement distributions for all cells in `cell_ids`'''
 
         displacement_dist = {}
         for u in cell_ids:
@@ -724,7 +827,7 @@ class RWFeatures:
         return displacement_dist
 
     def kurtosis_comparison(self, cell_ids, displacements):
-
+        '''Compares cell kurtosis to random walk kurtosis'''
         cell_kurtosis = {}
         diff_kurtosis = {}
         rayleigh_kurtosis = 3.245089
@@ -737,10 +840,8 @@ class RWFeatures:
 
     def vartau_kurtosis_comparison(self, cell_ids, max_tau = 10 ):
         '''
-        calculate cell_kurtosis and diff_kurtosis for a range of possible
-        time intervals (tau) from cell_ids and a list of tau
-        Outputs dict of dicts, keyed by tau, containing dicts keyed by cell_id
-        values of which are cell_kurtosis and diff_kurtosis
+        Calculate `cell_kurtosis` and `diff_kurtosis` for a range of possible
+        time intervals `tau`.
         '''
         # set up dicts keyed by tau, containing dicts keyed by cell_id
         all_cell_kurtosis = {}
@@ -755,7 +856,7 @@ class RWFeatures:
         return all_cell_kurtosis, all_diff_kurtosis
 
     def moving_kurt_comparison(self, cell_ids, displacements, speed):
-
+        '''Compare kurtosis only while cell is moving'''
         cell_kurtosis = {}
         diff_kurtosis = {}
         rayleigh_kurtosis = 3.245089
@@ -774,15 +875,17 @@ class RWFeatures:
     def moving_kurt(self, cell_ids, max_tau = 10, moving_range = range(1,11)):
         '''
         Parameters
-        --------------
+        ----------
 
-        cell_ids : dictionary keyed by cell_id, contains lists of
-                   tuples of sequential XY coordinates
-        max_tau : maximum time lag to consider for kurtosis calculations
-        moving_range : range of speeds to consider as a threshold for movement
+        cell_ids : dict
+            keyed by cell_id, values are lists of corrdinate tuples.
+        max_tau : int
+            maximum time lag to consider for kurtosis calculations.
+        moving_range : iterable
+            range of speeds to consider as a threshold for movement.
 
         Returns
-        --------------
+        -------
         cell_moving_kurt : triple dict raw kurtosis of all cells in cell_ids
                            keyed by speed threshold, tau, and cell_id
                            cell_moving_kurt = {
@@ -796,7 +899,6 @@ class RWFeatures:
                            }
         diff_moving_kurt : kurtosis of all cells, normalized by Rayleigh kurt
         structured as above
-
         '''
 
         cell_moving_kurt = {}
@@ -818,11 +920,11 @@ class RWFeatures:
         for each cell in cell_ids
 
         Parameters
-        -----------------
+        ----------
         cell_ids : dict of lists containing tuples of sequential XY coordinates
 
         Returns
-        -----------------
+        -------
         var : dict keyed by cell_id with variance of displacement distribution
         skew : dict keyed by cell_ids with skew of displacement distribution
         '''
@@ -842,6 +944,18 @@ class RWFeatures:
         Calculates the non-Gaussian parameter alpha_2 of a given displacement
         distribution, X
 
+        Parameters
+        ----------
+        X : array-like
+            distribution of displacements.
+
+        Returns
+        -------
+        alpha_2 : float
+            non-Gaussian coefficient, floating point values.
+
+        Notes
+        -----
         alpha_2 = <dx^4> / 3*<dx^2>^2 - 1
 
         effectively, a ratio of coeff* (kurtosis / variance)
@@ -854,14 +968,6 @@ class RWFeatures:
         motion would be expected to have alpha_2 == 0
 
         Rayleigh alpha_2 ~= -0.33
-
-        Parameters
-        ----------------------
-        X : distribution of displacements, either np.array or list
-
-        Returns
-        ----------------------
-        alpha_2 : non-Gaussian coefficient, floating point values
         '''
 
         X = np.asarray(X)
@@ -871,15 +977,17 @@ class RWFeatures:
 
     def nongauss_coeff(self, cell_ids):
         '''
-        Calculates non-Gaussian coefficient alpha_2 for all cells in cell_ids
+        Calculates non-Gaussian coefficient alpha_2 for all cells in cell_ids.
 
         Parameters
-        ----------------------
-        cell_ids : dict of lists containing tuples of sequential XY coordinates
+        ----------
+        cell_ids : dict
+            lists containing tuples of sequential XY coordinates.
 
         Returns
-        ----------------------
-        nongauss_coeff : dict keyed by cell_id, nonGauss coeff values
+        -------
+        nongauss_coeff : dict
+            keyed by cell_id, nonGauss coeff values.
         '''
 
         ngaussalpha = {}
@@ -892,6 +1000,7 @@ class RWFeatures:
 
 
     def largest_pow2(self, num):
+        '''Finds argmax_n 2**n < `num`'''
         for i in range(0,10):
             if int(num / 2**i) > 1:
                 continue
@@ -899,38 +1008,42 @@ class RWFeatures:
                 return i-1
 
     def rescaled_range(self, X, n):
-            # takes a series X and subseries size n
-            # finds the average rescaled range <R(n)/S(n)>
-            # for all sub-series of size n
-            N = len(X)
-            if n > N:
-                return None
-            # Create subseries of size n
-            num_subseries = int(N/n)
-            Xs = np.zeros((num_subseries, n))
-            for i in range(0, num_subseries):
-                Xs[i,] = X[ int(i*n) : int(n+(i*n)) ]
+        '''
+        Finds rescaled range <R(n)/S(n)> for all sub-series of size `n` in `X`
+        '''
+        N = len(X)
+        if n > N:
+            return None
+        # Create subseries of size n
+        num_subseries = int(N/n)
+        Xs = np.zeros((num_subseries, n))
+        for i in range(0, num_subseries):
+            Xs[i,] = X[ int(i*n) : int(n+(i*n)) ]
 
-            # Calculate mean rescaled range R/S
-            # for subseries size n
-            RS = []
-            for subX in Xs:
+        # Calculate mean rescaled range R/S
+        # for subseries size n
+        RS = []
+        for subX in Xs:
 
-                m = np.mean(subX)
-                Y = subX - m
-                Z = np.cumsum(Y)
-                R = max(Z) - min(Z)
-                S = np.std(subX)
-                if S <= 0:
-                    print("S = ", S)
-                    continue
-                RS.append( R/S )
-            RSavg = np.mean(RS)
+            m = np.mean(subX)
+            Y = subX - m
+            Z = np.cumsum(Y)
+            R = max(Z) - min(Z)
+            S = np.std(subX)
+            if S <= 0:
+                print("S = ", S)
+                continue
+            RS.append( R/S )
+        RSavg = np.mean(RS)
 
-            return RSavg
+        return RSavg
 
     def hurst_mandelbrot(self, cell_ids):
         '''
+        Calculates the Hurst coefficient `H` for each cell in `cell_ids`.
+
+        Notes
+        -----
         for E[R(n)/S(n)] = Cn**H as n --> inf
         H : 0.5 - 1 ; long-term positive autocorrelation
         H : 0.5 ; fractal Brownian motion
@@ -961,20 +1074,22 @@ class RWFeatures:
     # https://github.com/dokato/dfa/blob/master/dfa.py
     def dfa_all(self, cell_ids):
         '''
-        Performs detrended fluctuation analysis on cell displacement series,
-        as described in
-        Ping et. al., Mosaic organization of DNA nucleotides, 1994, Phys Rev E
+        Performs detrended fluctuation analysis on cell displacement series.
 
         Parameters
-        ----------------------
+        ----------
         cell_ids : dict of lists keyed by cell_id
         ea. list represents a cell. lists contain sequential tuples
         containing XY coordinates of a cell at a given timepoint
 
         Returns
-        ----------------------
+        -------
         dfa_alpha : dict keyed by cell_id, values are the alpha coefficient
         calculated by detrended fluctuation analysis
+
+        References
+        ----------
+        Ping et. al., Mosaic organization of DNA nucleotides, 1994, Phys Rev E
         '''
         dfa_alpha = {}
         allX = self.make_displacement_dist(cell_ids, tau = 1)
@@ -988,6 +1103,22 @@ class RWFeatures:
         '''
         Estimates the autocorrelation coefficient for each series of cell
         displacements over a range of time lags.
+
+        Parameters
+        ----------
+        cell_ids : dict of lists keyed by cell_id
+        ea. list represents a cell. lists contain sequential tuples
+        containing XY coordinates of a cell at a given timepoint
+
+        Returns
+        -------
+        autocorr : dict of lists, containing autocorrelation coeffs for
+        sequential time lags
+        qstats : dict of lists containing Q-Statistics (Ljung-Box)
+        pvals : dict of lists containing p-vals, as calculated from Q-Statistics
+
+        Notes
+        -----
         Estimation method:
         https://en.wikipedia.org/wiki/Autocorrelation#Estimation
 
@@ -997,19 +1128,6 @@ class RWFeatures:
         tau as a given time lag (sometimes referred to as k in literature)
 
         Implementation uses statsmodels.tsa.stattools.acf()
-
-        Parameters
-        ----------------------
-        cell_ids : dict of lists keyed by cell_id
-        ea. list represents a cell. lists contain sequential tuples
-        containing XY coordinates of a cell at a given timepoint
-
-        Returns
-        ----------------------
-        autocorr : dict of lists, containing autocorrelation coeffs for
-        sequential time lags
-        qstats : dict of lists containing Q-Statistics (Ljung-Box)
-        pvals : dict of lists containing p-vals, as calculated from Q-Statistics
 
         n.b. truncated to taus [1,10], to expand to more time lags, simply
         alter the indexing being loaded into the return dicts
@@ -1036,21 +1154,24 @@ class RWFeatures:
         Estimates the partial autocorrelation coefficient for each series of cell
         displacements over a range of time lags.
 
-        Implementation uses statsmodels.tsa.stattools.pacf()
-
         Parameters
-        ----------------------
-        cell_ids : dict of lists keyed by cell_id
-        ea. list represents a cell. lists contain sequential tuples
-        containing XY coordinates of a cell at a given timepoint
+        ----------
+        cell_ids : dict
+            keyed by cell_id, values are lists of coordinate tuples.
+        max_tau : int
+            maximum tau to estimate partial autocorrelation.
 
         Returns
-        ----------------------
-        partial_acorr : dict of lists, containing autocorrelation coeffs for
-        sequential time lags
+        -------
+        partial_acorr : dict
+            keyed by cell id, values are lists, containing autocorrelation coeffs
+            for sequential time lags
 
+        Notes
+        -----
         n.b. truncated to taus [1,10], to expand to more time lags, simply
-        alter the indexing being loaded into the return dicts
+        alter the indexing being loaded into the return dicts.
+        Implementation uses statsmodels.tsa.stattools.pacf()
         '''
         partial_acorr = {}
 

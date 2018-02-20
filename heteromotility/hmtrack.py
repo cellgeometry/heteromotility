@@ -1,49 +1,49 @@
+'''
+1. Establish cell paths from centroid locations and time points
+2. Sanity checking of the resulting cell paths
+3. Identify colliding cells, remove one or both colliders from analysis
+'''
 from __future__ import division, print_function
 from .hmtools import dedupe, cell_ids2tracks
 from .hmstats import distance, average_xy
 import sys
 import numpy as np
 
-'''
-#---------------------------
-# MODULE CONTENTS
-#---------------------------
-Classes to/for:
-1. Establish cell paths from centroid locations and time points
-2. Sanity checking of the resulting cell paths
-3. Identify colliding cells, remove one or both colliders from analysis
-
-'''
-
-#---------------------------
-# ESTABLISH CELL PATHS
-#---------------------------
-# WIP
-class CellPaths:
+class CellPaths(object):
     '''
-    CellPaths accepts either a list of lists of tuples containing centroid
-    XY coordinates for each object in a frame (centroid_arrays)
-    OR
-    a dict keyed by unique cell identifiers
-    (i.e. 0, 1, 2) with values as a list of tuples containg a single cell's XY
-    coordinates, each tuple representing a given timepoint
+    Creates `cell_ids` dictionaries from a variety of inputs.
 
-    If an array of centroids is provided, CellPaths uses Heteromotility's
-    built in tracking algorithm
-    A dict of lists two ndarrays of X and Y coordinates would be provided
-    if another tracking algorithm is desired
+    Attributes
+    ----------
+    cell_ids : dict
+        keyed by cell id, values are lists of coordinate tuples.
+    epsilon : float.
+        small float, at the magnitude of non-perturbing noise. Default = 1e-9.
 
-    centroid_arrays = [
-                        [(x,y), (x,y), (x,y), ...] # ea. sublist is a timepoint
-                        [(x,y), (x,y), (x,y), # each tuple is one object's XY ]
-                        ]
-
+    Notes
+    -----
     cell_ids = {
                 0 : [ (x1,y1), (x2,y2), (x3,y3), (x4,y4) ] # ea key is an object
                 1 : [ (x1,y1), (x2,y2), (x3,y3), (x4,y4) ] # ea tuple is a timepoint
                 }
     '''
     def __init__(self, centroid_arrays = [], cell_ids = {}, tracksX=None, tracksY=None, sanity_px = 200, interp_lim = 3):
+        '''
+        Creates `cell_ids` dictionaries from a variety of inputs.
+
+        Parameters
+        ----------
+        centroid_arrays : list
+            list of np.ndarray of centroids.
+        cell_ids : dict.
+            previously generated `cell_ids` dict.
+        tracksX, tracksY : np.ndarray.
+            N x T array of cell X, Y coordinates.
+        sanity_px : int
+            maximum distance for use in cell tracking with `centroid_arrays`.
+        interp_lim : int
+            maximum interpolation for use in cell tracking with `centroid_arrays`.
+        '''
 
         self.epsilon = 1e-9
 
@@ -59,12 +59,6 @@ class CellPaths:
             print("CellPaths requires an array of centroids or provided cell_ids")
             sys.exit()
 
-        # self.check_invariant_tracks()
-        # self.fuzz_invariant_tracks()
-
-    # assign each object in t0 centroids array a key in cell_ids dict
-    # keys are just iterated integers, could do something fancier
-    # if you need to for any reason
     def assign_cell_ids(self, centroid_arrays):
         cell_ids = {}
         i = 0
@@ -73,12 +67,6 @@ class CellPaths:
             cell_ids[i].append(coor)
             i = i + 1
         return cell_ids
-
-    # for each unique cell in cell_ids, find the closest coordinate to
-    # the previous value in the next centroid array and append it
-    # NOTE:
-    # This assumes fairly limited cell motility b/w frames
-    # and very little cell::cell contact
 
     def establish_cell_paths(self, centroid_arrays, sanity_px, interp_lim):
         cell_ids = self.assign_cell_ids(centroid_arrays)
@@ -106,6 +94,8 @@ class CellPaths:
 
     def tracks2cell_ids(self, tracksX, tracksY):
         '''
+        Converts tracks arrays to `cell_ids` dict.
+
         Parameters
         ----------
         tracksX : ndarray.
@@ -137,17 +127,6 @@ class CellPaths:
             cell_ids[i] = t
 
         return cell_ids
-
-    #---------------------------
-    # SANITY TESTING OF PATHS
-    #---------------------------
-
-    # Find points that move too quickly
-    # (likely not segmented in one frame)
-    # Correct for this by interpolating from the previous sensible point
-    # and the next sensible point
-    # Outputs a corrected cell_ids dict, a list of cells to remove,
-    # and a list of lists with the points that were corrected
 
     def sanity_check(self, cell_ids, sanity_px, interp_lim = 3):
         points_corrected = []
@@ -226,16 +205,6 @@ class CellPaths:
 
         return
 
-
-#------------------------------
-# CHECK FOR REMAINING CELLS
-#------------------------------
-
-# Checks to see if any cells remain after removing cells
-# that fail the sanity check
-# If no cells are left, exits the script gracefully
-# without pickling cell_ids or removed_ids
-
 def check_remaining_cells( cell_ids, verbose=False ):
 
     if len(cell_ids) > 0:
@@ -244,122 +213,4 @@ def check_remaining_cells( cell_ids, verbose=False ):
     else:
         if verbose:
             print("No cells remain after sanity checking \n")
-        sys.exit()
-
-#------------------------------
-# CHECK TWO CELLS COLLIDING
-#------------------------------
-
-
-# Detects collisions of cells, and records them in a dict collider_log
-# Stores all seen positions and cooresponding cells in seen = {}
-
-# seen = { cell1 : coor, cell2 : coor, ... }
-
-# When a collision is found, adds the colliding cells and coor to
-# collider log
-
-# collider_log = { t1: [ [cell1, cell2, coor], [cell3, cell4, coor]
-#                   t2: ...                                           }
-
-def find_colliders(cell_ids):
-
-    collider_log = {}
-    colliding_cells_log = {}
-    seen_log = {}
-    t = 0
-    first_key = list(cell_ids)[0]
-    while t < len( cell_ids[ first_key ] ):
-        seen = {}
-        colliders = []
-        colliding_cells = []
-
-        for u in cell_ids:
-            coor = cell_ids[u][t]
-            if coor in seen.values():
-
-                for prev_cell, prev_coor in seen.iteritems():
-                    if coor == prev_coor:
-                        colliders.append( [ (prev_cell, u) , coor] )
-                        colliding_cells.append(u)
-                        colliding_cells.append(prev_cell)
-                    else:
-                        pass
-                seen[u] = coor
-            else:
-                seen[u] = coor
-
-        seen_log[t] = seen
-        collider_log[t] = colliders
-        colliding_cells_log[t] = dedupe(colliding_cells)
-        prop_colliders = float(len(dedupe(colliding_cells))) / float(len(cell_ids))
-
-        t += 1
-
-    return collider_log, prop_colliders
-
-# Takes collider_log, checks to see if collisions
-# are longer than a stringencey coeff.
-# If not, marks cells as persistent colliders
-
-def find_persistent_colliders(collider_log, stringency_coeff):
-
-    t = 0
-    persistent_colliders = []
-    temp_colliders = []
-    while t < (len(collider_log) - 30):
-        timepoint = collider_log[t]
-        for group in timepoint:
-            collide_pair = group[0]
-            future_pairs = []
-            for i in range(1,31):
-                future = collider_log[ t + i ]
-                for future_group in future:
-                    future_pairs.append( future_group[0] )
-
-            if future_pairs.count( collide_pair ) > stringency_coeff:
-                persistent_colliders.append( collide_pair )
-            else:
-                temp_colliders.append( collide_pair )
-        t += 1
-
-    persistent_colliders = dedupe(persistent_colliders)
-    temp_colliders = dedupe(temp_colliders)
-
-    return persistent_colliders, temp_colliders
-
-# Takes persistent colliders & uses removal function
-# from sanity testing to remove from cell_ids
-
-def remove_both_colliders(persistent_colliders, cell_ids):
-
-    to_remove = []
-    for collide_pair in persistent_colliders:
-        to_remove.append(collide_pair[0])
-        to_remove.append(collide_pair[1])
-
-    to_remove = dedupe(to_remove)
-    to_remove.sort()
-
-    cell_ids, collider_ids = remove_cells(cell_ids, to_remove)
-    return cell_ids, collider_ids
-
-def remove_one_collider(persistent_colliders, cell_ids):
-
-    to_remove = []
-    for collide_pair in persistent_colliders:
-        to_remove.append(collide_pair[0])
-
-    to_remove = dedupe(to_remove)
-    to_remove.sort()
-
-    cell_ids, collider_ids = remove_cells(cell_ids, to_remove)
-    return cell_ids, collider_ids
-
-def check_colliding_cells( cell_ids ):
-
-    if len(cell_ids) > 0:
-        print(len(cell_ids), ' cells remain after collider checking \n')
-    else:
-        print("No cells remain after collider checking \n")
         sys.exit()

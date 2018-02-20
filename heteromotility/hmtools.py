@@ -1,19 +1,25 @@
 '''
-#---------------------------
-# MODULE CONTENTS
-#---------------------------
-Functions to/for:
-Manipulate/shape data structures
-
+Tools for manipulating data structures.
+TODO : refactor and replace with standard `pandas` implementations.
 '''
 from __future__ import print_function, division
 import numpy as np
 
 def dict2array(d):
-    # takes dict of lists
-    # d = {0: [a1, a2, a3], 1: [b1,b2,b3], 2: [...]}
-    # merges into list of lists
-    # output = [ [a1,a2,a3], [], [] ]
+    '''
+    Merges a dict of lists into a list of lists with the same order.
+
+    Parameters
+    ----------
+    d : dict.
+
+    Returns
+    -------
+    output : list.
+        list of lists.
+    order : list.
+        keys from dict in order of listing.
+    '''
     output = []
     order = []
     for u in d:
@@ -22,12 +28,22 @@ def dict2array(d):
     return output, order
 
 def dictofdict2array(top_dict):
-    # Takes dict of
-    # dict_of_dict = { a: {x1 : a1, x2 : a2, x3 : a3},
-    #                   b: {x1 : b1, x2 : b2, x3 : b3},
-    #                   c: {x1 : c1, x2 : c2, x3 : c3} }
-    # Outputs list of lists
-    # output = [ [a1,b1,c1], [a2,b2,c2]... ]
+    '''
+    Converts a dictionary of dictionaries with scalar values and converts
+    to a list of lists.
+
+    Parameters
+    ----------
+    top_dict : dict
+        i.e. { a: {x1 : a1, x2 : a2, x3 : a3},
+               b: {x1 : b1, x2 : b2, x3 : b3} }
+    Returns
+    -------
+    output : list
+        i.e. [ [a1, b1, c1], [a2, b2, c2] ]
+    order : list
+        keys of top_dict, ordered as listed.
+    '''
     output = []
     order = []
     N = len( top_dict[ list(top_dict)[0] ] ) # number of cells
@@ -45,6 +61,22 @@ def dictofdict2array(top_dict):
     return output, dedupe(order)
 
 def tripledict2array(top_dict):
+    '''
+    Converts a teriary leveled dictionary to a list of lists.
+
+    Parameters
+    ----------
+    top_dict : dict
+        i.e. { a: {x1 : {y1 : [z1,]}, x2 : {y2: [z2,]} },
+               b: {x1 : {y1 : [z1,]}, x2 : {y2: [z2, z3, z4]} } }
+
+    Returns
+    -------
+    output : list
+        i.e. [[z1, z2], [z1, z2, z3, z4]]
+    order : list.
+        keys of the tertiary dictionaries, ordered as listed.
+    '''
     output = []
     order1 = []
     order2 = []
@@ -67,6 +99,19 @@ def tripledict2array(top_dict):
     return output, dedupe(order3)
 
 def cell_ids2tracks(cell_ids):
+    '''
+    Converts a `cell_ids` dict to `tracksX` and `tracksY` (N,T) coordinate arrays.
+
+    Parameters
+    ----------
+    cell_ids : dict
+        cell paths, keyed by an `id`, valued are a list of tuple (x,y) coordinates.
+
+    Returns
+    -------
+    tracksX, tracksY : ndarray.
+        N x T arrays of X and Y locations respectively
+    '''
     N = len(cell_ids)
     T = len(cell_ids[list(cell_ids)[0]])
     tracksX = np.zeros([N,T])
@@ -82,34 +127,41 @@ def cell_ids2tracks(cell_ids):
 
     return tracksX, tracksY
 
-# Super fast deduping of lists, preserves order
-# Credit to Peterbe
-# http://www.peterbe.com/plog/uniqifiers-benchmark
-def dedupe(seq, idfun=None):
-   # order preserving
-   if idfun is None:
-       def idfun(x): return x
-   seen = {}
-   result = []
-   for item in seq:
-       marker = idfun(item)
-       # in old Python versions:
-       # if seen.has_key(marker)
-       # but in new ones:
-       if marker in seen: continue
-       seen[marker] = 1
-       result.append(item)
-   return result
 
-# Takes a list of lists of lists [ [ [], ... ], [ [], ... ], ...]
-# Returns list of lists, with each nth list containing the values of the
-# nth tertiary lists merged together
+def dedupe(seq, idfun=None):
+    '''
+    Deduplicates lists.
+    '''
+    # order preserving
+    if idfun is None:
+        def idfun(x): return x
+    seen = {}
+    result = []
+    for item in seq:
+        marker = idfun(item)
+        # in old Python versions:
+        # if seen.has_key(marker)
+        # but in new ones:
+        if marker in seen: continue
+        seen[marker] = 1
+        result.append(item)
+    return result
+
 import itertools
 def merge_flat_lists(lists):
-    # lists = [
-    #           [ [...], [...], [...] ],
-    #           [ [...], [...], ... ], ...
-    #                                        ]
+    '''
+    Merges a tertiary list of lists into a seconday list of lists.
+
+    Parameters
+    ----------
+    lists : list.
+        tertiary list of lists [ [[a0,a1,a2], [b0,b1,b2]] ]
+
+    Returns
+    -------
+    merged_list : list.
+        secondary list of lists [[a0,a1,a2,b0,b1,b2]]
+    '''
     merged_list = []
     n_rows = len(lists[0])
     i = 0
@@ -126,6 +178,27 @@ def merge_flat_lists(lists):
     return merged_list
 
 def single_outputs_list(cell_ids, gf, rwf, msdf, output_dir, suffix=None):
+    '''
+    Creates a list of lists list[N][M] of cell statistics for CSV export.
+
+    Parameters
+    ----------
+    cell_ids : dict
+        cell paths, keyed by an `id`, valued are a list of tuple (x,y) coordinates.
+
+    gf : hmstats.GeneralFeatures object
+    rwf : hmstats.RWFeatures object
+    msdf : hmstats.MSDFeatures object
+    output_dir : string
+        path to output directory.
+    suffix : string
+        suffix appended to output filenames.
+
+    Returns
+    -------
+    output_list : list
+        list of lists, output_list[N][M], where `N` is cells and `M` is features.
+    '''
     # Creates a list of lists for writing out statistics
     # Ea. internal list is a single cell's stats
     output_list = []
@@ -173,7 +246,29 @@ def fix_order(correct_order, new_order, sorting):
 
 
 def make_merged_list(ind_outputs, gf, rwf):
-    # collect the order of output ids in a list
+    '''Merge output lists for all features
+
+    Parameters
+    ----------
+    ind_outputs : list
+        ind_outputs[N][M], where `N` is cells and `M` is features.
+    gf : hmstats.GeneralFeatures object
+    rwf : hmstats.RWFeatures object
+
+    Returns
+    -------
+    merged_list : list
+        merged_list[N][M], where `N` is cells and `M` is features.
+
+    Notes
+    -----
+    Utilized `fix_order` and assertion checks to ensure that dictionary ordering
+    is not perturbed during concatenation, which can occur in Python2 where
+    dict primitive behavior is not robust to ordering in the manner of Python3.
+    This is not official support for Python2, merely an attempt to prevent
+    silent failure and generation of erroneous output.
+    '''
+
     ind_order = []
     for i in ind_outputs:
         ind_order.append(i[1])

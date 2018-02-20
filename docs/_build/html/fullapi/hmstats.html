@@ -1,0 +1,1078 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>heteromotility/hmstats module &mdash; Heteromotility 0.1.8 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Heteromotility 0.1.8 documentation" href="../index.html"/>
+        <link rel="up" title="API" href="index.html"/>
+        <link rel="next" title="heteromotility/hmdetail module" href="hmdetail.html"/>
+        <link rel="prev" title="Command Line API" href="cliapi.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Heteromotility
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#cli-usage">CLI Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#library-api">Library API</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#motility-statistics-module">Motility Statistics Module</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">heteromotility/hmstats module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#path-subset-analysis-module">Path Subset Analysis Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#motility-simulation-module">Motility Simulation Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#i-o-module">I/O Module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Heteromotility</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">API</a> &raquo;</li>
+        
+      <li>heteromotility/hmstats module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/fullapi/hmstats.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-heteromotility.hmstats">
+<span id="heteromotility-hmstats-module"></span><h1>heteromotility/hmstats module<a class="headerlink" href="#module-heteromotility.hmstats" title="Permalink to this headline">¶</a></h1>
+<ol class="arabic simple">
+<li>Calculate general motility features (average speed, distance, …)</li>
+<li>Calculate features related to mean squared displacement</li>
+<li>Calculate features related to random walk similarity</li>
+</ol>
+<dl class="function">
+<dt id="heteromotility.hmstats.average_xy">
+<code class="descclassname">heteromotility.hmstats.</code><code class="descname">average_xy</code><span class="sig-paren">(</span><em>coor1</em>, <em>coor2</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.average_xy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the average value of two XY coordinates</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="heteromotility.hmstats.distance">
+<code class="descclassname">heteromotility.hmstats.</code><code class="descname">distance</code><span class="sig-paren">(</span><em>coor1</em>, <em>coor2</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Euclidean distance</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="heteromotility.hmstats.GeneralFeatures">
+<em class="property">class </em><code class="descclassname">heteromotility.hmstats.</code><code class="descname">GeneralFeatures</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>move_thresh=5</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Calculates features of speed, distance, path shape, and turning behavior.</p>
+<dl class="attribute">
+<dt id="heteromotility.hmstats.GeneralFeatures.cell_ids">
+<code class="descname">cell_ids</code><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.cell_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – keyed by cell ids, values are lists of coordinate tuples.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.GeneralFeatures.moving_tau">
+<code class="descname">moving_tau</code><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.moving_tau" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – threshold for movement</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.GeneralFeatures.tau_range">
+<code class="descname">tau_range</code><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.tau_range" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>iterable, ints</em> – range of window sizes to use to establish cell direction by regression.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.GeneralFeatures.interval_range">
+<code class="descname">interval_range</code><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.interval_range" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>iterable, ints</em> – range of time intervals to use between a cell’s current and ‘next’
+direction when calculating turning features.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.GeneralFeatures.total_distance">
+<code class="descname">total_distance</code><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.total_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – total distance each cell travels.
+keyed by cell id, values are floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.GeneralFeatures.net_distance">
+<code class="descname">net_distance</code><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.net_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – net distance each cell traveled, dist(final_pos - init_pos)
+keyed by cell id, values are floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.GeneralFeatures.linearity">
+<code class="descname">linearity</code><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.linearity" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – Pearson’s r**2 linearity metric on cell paths.
+keyed by cell id, values are floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.GeneralFeatures.spearmanrsq">
+<code class="descname">spearmanrsq</code><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.spearmanrsq" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – Spearman’s rho**2 monotonicity metric on cell paths.
+keyed by cell id, values are floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.GeneralFeatures.progressivity">
+<code class="descname">progressivity</code><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.progressivity" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – net_distance/total_distance, metric of directional persistence.
+keyed by cell id, values are floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.GeneralFeatures.min_speed">
+<code class="descname">min_speed</code><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.min_speed" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – minimum cell speed.
+keyed by cell id, values are floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.GeneralFeatures.max_speed">
+<code class="descname">max_speed</code><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.max_speed" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – maximum cell speed.
+keyed by cell id, values are floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.GeneralFeatures.avg_moving_speed">
+<code class="descname">avg_moving_speed</code><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.avg_moving_speed" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – average moving speed above a certain threshold speed,
+defined as the movement cutoff.
+useful to deconfound the cell’s average speed while moving from the
+dwell time in an immotile state.
+keyed by threshold, values are dicts keyed by cell id, valued with floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.GeneralFeatures.time_moving">
+<code class="descname">time_moving</code><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.time_moving" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – proportion of time spent moving above a certain threshold speed,
+defined as the movement cutoff.
+keyed by threshold, values are dicts keyed by cell id, valued with floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.GeneralFeatures.turn_stats">
+<code class="descname">turn_stats</code><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.turn_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – proportion of the time a cell turns to the right of its past direction.
+useful to determine directional bias.
+keyed by <cite>tau</cite> from <cite>tau_range</cite>, values are dicts keyed by <cite>interval</cite> from <cite>interval_range</cite>.
+final dicts have float values, [0, 1].</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.GeneralFeatures.theta_stats">
+<code class="descname">theta_stats</code><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.theta_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – average turning angle magnitude.
+keyed by <cite>tau</cite> from <cite>tau_range</cite>, values are dicts keyed by <cite>interval</cite> from <cite>interval_range</cite>.
+final dicts have float values, [0, 1].</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.GeneralFeatures.calc_total_distance">
+<code class="descname">calc_total_distance</code><span class="sig-paren">(</span><em>cell_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.calc_total_distance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.GeneralFeatures.calc_net_distance">
+<code class="descname">calc_net_distance</code><span class="sig-paren">(</span><em>cell_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.calc_net_distance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.GeneralFeatures.calc_linearity">
+<code class="descname">calc_linearity</code><span class="sig-paren">(</span><em>cell_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.calc_linearity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.GeneralFeatures.calc_spearman">
+<code class="descname">calc_spearman</code><span class="sig-paren">(</span><em>cell_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.calc_spearman" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.GeneralFeatures.calc_progressivity">
+<code class="descname">calc_progressivity</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>net_distance</em>, <em>total_distance</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.calc_progressivity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.GeneralFeatures.calc_minmax_speed">
+<code class="descname">calc_minmax_speed</code><span class="sig-paren">(</span><em>cell_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.calc_minmax_speed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate max/min speeds as the distance traveled
+across 5 frames and append as a float to list max_speed/min_speed
+Speeds in the unit of pixels per hour</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.GeneralFeatures.calc_moving_stats">
+<code class="descname">calc_moving_stats</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>move_speed</em>, <em>tau</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.calc_moving_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the proportion of time a cell spends moving_speeds,
+min, max, and average speeds while moving</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cell_ids</strong> (<em>dict keyed by cell id</em><em>, </em><em>containing lists of tupled XY coors</em>) – </li>
+<li><strong>move_speed</strong> (<em>minimum speed to be considered &quot;moving&quot;</em>) – </li>
+<li><strong>tau</strong> (<em>time lag to use when determining movement speed</em>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.GeneralFeatures.calc_moving_variable_threshold">
+<code class="descname">calc_moving_variable_threshold</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>thresholds=range(1</em>, <em>11)</em>, <em>tau=5</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.calc_moving_variable_threshold" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.GeneralFeatures.turn_direction">
+<code class="descname">turn_direction</code><span class="sig-paren">(</span><em>cell_path</em>, <em>tau=10</em>, <em>interval=5</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.turn_direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the proportion of time a cell turns left as float 0.0-1.0.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cell_path</strong> (<em>list</em>) – timeseries of tuples, each tuple holding an XY position
+i.e. cell_path = [(x1,y1), (x2,y2)…(xn,yn)]</li>
+<li><strong>tau</strong> (<em>int</em>) – desired time lag between a point of
+interest and a point in the distance (p_n+tau) to determine
+a cell’s turning behavior. Must be &gt; <cite>interval</cite>.</li>
+<li><strong>interval</strong> (<em>int</em>) – number of points ahead and behind the point of interest to consider
+when find a regression line to represent the cell’s direction at p_n.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>turns</strong> (<em>list</em>) – binaries reflecting turns left (0) or right (1)</li>
+<li><strong>thetas</strong> (<em>list</em>) – angles of each turn in radians</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>(1) Estabish direction of object at p_n:
+Given a time series XY of x,y coordinates, where p_t denotes a point
+at time t, take a given point p_n
+determine the ‘direction’ of motion at p_n by plotting a linear reg.
+on points [p_n-i, p_n+i] for some interval value i
+This linear regression function is R(x) = slope*x + b</p>
+<p>(2) Determine if p_n+tau is left or right
+For a point p_n+tau, for a variable time lag tau, determine if p_n+tau
+lies left or right of R</p>
+<blockquote>
+<div>p_n+tau,Y &gt; R(p_n+tau) and initial direction = right : left turn
+p_n+tau,Y &lt; R(p_n+tau) and initial direction = right : right turn
+…</div></blockquote>
+<p>(3) Calculate magnitude of turn theta
+Calculate the angle of the turn theta as the angle between</p>
+<blockquote>
+<div><p>R(x) from (1)
+R2, line connecting p_n to p_n+tau</p>
+<p>v1 = (1, slope of R(x))
+v2 = (1, slope of R2)</p>
+<p>theta = arccos( v1 dot v2 / ||v1|| * ||v2||)</p>
+</div></blockquote>
+<p>N.B. If a cell moves in a perfectly straight line, such that point of
+interest p_n has x coordinate == p_n+tau, the function skips this p_n
+i.e. Skips if the cell has moved in a perfectly linear line, or circled
+back on itself</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.GeneralFeatures.all_turn_stats">
+<code class="descname">all_turn_stats</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>tau_range=range(9</em>, <em>12)</em>, <em>interval_range=range(5</em>, <em>7)</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.GeneralFeatures.all_turn_stats" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cell_ids</strong> (<em>dict</em>) – keyed by cell id, values are lists of tuple coordinates.</li>
+<li><strong>tau_range</strong> (<em>iterable</em>) – range of time lags to try for calculation.</li>
+<li><strong>interval_range</strong> (<em>iterable</em>) – range of interval distances to use for calculation of
+the linregress about point of interest p_n.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>turn_stats</strong> (<em>dict</em>) – keyed by tau, containing dict keyed by interval,
+containing dict keyed by cell, containing proportion of
+time a cell turns right</li>
+<li><strong>theta_stats</strong> (<em>dict</em>) – keyed by tau, containing dict keyed by interval,
+containing dict keyed by cell, containing a list of
+three elements [avg_theta, min_theta, max_theta]</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="heteromotility.hmstats.MSDFeatures">
+<em class="property">class </em><code class="descclassname">heteromotility.hmstats.</code><code class="descname">MSDFeatures</code><span class="sig-paren">(</span><em>cell_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.MSDFeatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Calculates mean squared displacement related features.</p>
+<dl class="attribute">
+<dt id="heteromotility.hmstats.MSDFeatures.cell_ids">
+<code class="descname">cell_ids</code><a class="headerlink" href="#heteromotility.hmstats.MSDFeatures.cell_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – keyed by cell ids, values are lists of coordinate tuples.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.MSDFeatures.msd_distributions">
+<code class="descname">msd_distributions</code><a class="headerlink" href="#heteromotility.hmstats.MSDFeatures.msd_distributions" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – MSDs for each cell across a range of time lags <cite>tau</cite>.
+keyed by cell ids, values are lists of floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.MSDFeatures.log_distributions">
+<code class="descname">log_distributions</code><a class="headerlink" href="#heteromotility.hmstats.MSDFeatures.log_distributions" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – log transform of <cite>msd_distributions</cite>.
+keyed by cell ids, values are lists of floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.MSDFeatures.alphas">
+<code class="descname">alphas</code><a class="headerlink" href="#heteromotility.hmstats.MSDFeatures.alphas" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – alpha exponent for each cells motion.
+keyed by cell ids, values are floats.</p>
+</dd></dl>
+
+<p class="rubric">Notes</p>
+<p>MSD(tau) = (1 / tau) * sum( (x(t + tau) + x(t))^2 )</p>
+<p>Plotting a distribution of Tau vs MSD will generate a curve.
+The exponential nature of this curve will describe the type
+of motion the particle is experiencing.</p>
+<p>1 &lt; alpha –&gt; impeded diffusion
+Linear curve (alpha = 1) –&gt; diffusion
+1 &lt; alpha &lt; 2 –&gt; super diffusion
+alpha = 2 –&gt; ballistic motion</p>
+<dl class="method">
+<dt id="heteromotility.hmstats.MSDFeatures.calc_msd">
+<code class="descname">calc_msd</code><span class="sig-paren">(</span><em>path</em>, <em>tau</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.MSDFeatures.calc_msd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates mean squared displacement for a cell path
+for a given time lag tau</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path</strong> (<em>list</em>) – tuples of sequential XY coordinates.</li>
+<li><strong>tau</strong> (<em>int</em>) – time lag to consider when calculating MSD.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>msd</strong> – mean squared displacement of path given time lag tau.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.MSDFeatures.calc_msd_distribution">
+<code class="descname">calc_msd_distribution</code><span class="sig-paren">(</span><em>path</em>, <em>max_tau</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.MSDFeatures.calc_msd_distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the distribution of MSDs for a range of time
+lag values tau.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path</strong> (<em>list</em>) – tuples containing sequential XY coordinates.</li>
+<li><strong>max_tau</strong> (<em>int</em>) – maximum time lag <cite>tau</cite> to consider for MSD calculation.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>distribution</strong> (<em>list</em>) – MSDs indexed by <cite>tau</cite>.</li>
+<li><strong>log_distribution</strong> (<em>list</em>) – log transform of <cite>distribution</cite>.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>If a cell is stationary indefinitely, it effectively has
+a MSD of <cite>0</cite>.
+However, this calls a math domain error, so checks are in
+place that ensure the final <cite>alpha</cite> calculation will be
+0 without raising exceptions.</p>
+<p>Here – returns both distributions as a string ‘flat’ if
+MSD calc is 0 for a given range tau</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.MSDFeatures.msd_dist_all_cells">
+<code class="descname">msd_dist_all_cells</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>tau=31</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.MSDFeatures.msd_dist_all_cells" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates MSD distributions for all cells in dict cell_ids</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cell_ids</strong> (<em>dictionary keyed by cell_id</em><em>, </em><em>contains lists of</em>) – tuples of sequential XY coordinates</li>
+<li><strong>tau</strong> (<em>maximum time lag to calculate for MSD distributions</em>) – n.b. if path &lt; 30 t’s long, uses len(path) as max tau</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>msd_distributions</strong> (<em>dict keyed by cell_id containing list</em>) – of MSD distributions, indexed by tau</li>
+<li><strong>log_distributions</strong> (<em>dict with log transformed lists of</em>) – MSD distributions</li>
+<li><em>Notable behavior</em></li>
+<li><em>——————-</em></li>
+<li><em>checks for distributions == ‘flat’ string and sets values for</em></li>
+<li><em>that cell as ‘flat’, which is checked to provide an alpha of 0</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.MSDFeatures.calc_alphas">
+<code class="descname">calc_alphas</code><span class="sig-paren">(</span><em>log_distributions</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.MSDFeatures.calc_alphas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the alpha coefficient value as the slope of a
+log(MSD) v log(tau) plot</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>log_distributions</strong> (<em>dict</em>) – keyed by cell_id containing lists of log transformed MSDs,
+indexed by tau</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>alphas</strong> – keyed by cell_id, with values as the alpha coeff
+from log(MSD(tau)) = alpha*log(tau)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Checkes if log_distributions[cell_id] is == ‘flat’
+If so, sets alpha at the appropriate “flat” slope of 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="heteromotility.hmstats.RWFeatures">
+<em class="property">class </em><code class="descclassname">heteromotility.hmstats.</code><code class="descname">RWFeatures</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>gf</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Calculates features relative to a random walk and self-similarity measures.</p>
+<dl class="attribute">
+<dt id="heteromotility.hmstats.RWFeatures.cell_ids">
+<code class="descname">cell_ids</code><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.cell_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – keyed by cell ids, values are lists of coordinate tuples.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.RWFeatures.gf">
+<code class="descname">gf</code><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.gf" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>hmsims.GeneralFeatures object.</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.RWFeatures.diff_linearity">
+<code class="descname">diff_linearity</code><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.diff_linearity" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – difference in linearity r**2 between observed cell and a random walk.
+keyed by cell ids, values are floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.RWFeatures.diff_net_dist">
+<code class="descname">diff_net_dist</code><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.diff_net_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – difference in net distance between an observed cell and a random walk.
+keyed by cell ids, values are floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.RWFeatures.cell_kurtosis">
+<code class="descname">cell_kurtosis</code><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.cell_kurtosis" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – measured displacement distribution kurtosis.
+keyed by cell ids, values are floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.RWFeatures.diff_kurtosis">
+<code class="descname">diff_kurtosis</code><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.diff_kurtosis" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – difference between <cite>cell_kurtosis</cite> and a random walk kurtosis.
+keyed by cell ids, values are floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.RWFeatures.nongaussalpha">
+<code class="descname">nongaussalpha</code><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.nongaussalpha" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – non-Gaussian parameters alpha_2 of the displacement distribution.
+keyed by cell ids, values are floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.RWFeatures.disp_var">
+<code class="descname">disp_var</code><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.disp_var" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – variance of the displacement distribution.
+keyed by cell ids, values are floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.RWFeatures.hurst_RS">
+<code class="descname">hurst_RS</code><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.hurst_RS" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – Hurst coefficients of the displacement time series, as estimated by
+Mandelbrot’s original Rescaled Range method.
+keyed by cell ids, values are floats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.RWFeatures.autocorr_max_tau">
+<code class="descname">autocorr_max_tau</code><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.autocorr_max_tau" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – maximum tau for autocorrelation calculation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmstats.RWFeatures.autocorr">
+<code class="descname">autocorr</code><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.autocorr" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – autocorrelation coefficients for displacement time series.
+keyed by cell ids, values are floats.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.RWFeatures.random_walk">
+<code class="descname">random_walk</code><span class="sig-paren">(</span><em>origin</em>, <em>N</em>, <em>speed_mu</em>, <em>speed_sigma=None</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.random_walk" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>origin</strong> (<em>starting point for the model</em>) – </li>
+<li><strong>N</strong> (<em>number of steps to model</em>) – </li>
+<li><strong>speed_mu</strong> (<em>mean speed for the model</em>) – </li>
+<li><strong>speed_sigma</strong> (<em>stdev of the normal distribution for step sizes</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>model_net_dist</strong> (<em>float</em>)</li>
+<li><strong>model_linearity</strong> (<em>float</em>)</li>
+<li><strong>model_path</strong> (<em>list</em>)</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Net distance of random walks is based on
+tau = time_unit
+rate = sigma = step_size = time_unit * velocity_x
+n = number of steps (can be exchanged for t if =)
+&lt;x(t)^2&gt; = n * sigma^2
+&lt;x(t)^2&gt;^0.5 = sigma * sqrt(n) = step_size * sqrt(n)
+&lt;(x,y)^2&gt; = &lt;r^2&gt; = &lt;x(t)^2&gt; + &lt;y(t)^2&gt; = 2 * n * sigma^2
+&lt;r^2&gt;^0.5 = sqrt(2) * step_size * sqrt(n)</p>
+<p>step_size = rate = c = sqrt(x_step^2 + y_step^2) = sqrt(2*step^2)
+x_step = y_step = rate/sqrt(2)
+(Random Walks in Biology, 1992, Howard C. Berg)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.RWFeatures.compare_to_randwalk">
+<code class="descname">compare_to_randwalk</code><span class="sig-paren">(</span><em>cell</em>, <em>u</em>, <em>cell_linearity</em>, <em>cell_net_dist</em>, <em>cell_avg_speed</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.compare_to_randwalk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares an observed path to a simulated random walk with the
+same displacement mean</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.RWFeatures.run_comparative_randwalk">
+<code class="descname">run_comparative_randwalk</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>linearity</em>, <em>net_distance</em>, <em>avg_speed</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.run_comparative_randwalk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs comparisons to random walks for all cells in <cite>cell_ids</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.RWFeatures.make_displacement_dist">
+<code class="descname">make_displacement_dist</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>tau</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.make_displacement_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates displacement distributions for all cells in <cite>cell_ids</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.RWFeatures.kurtosis_comparison">
+<code class="descname">kurtosis_comparison</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>displacements</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.kurtosis_comparison" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares cell kurtosis to random walk kurtosis</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.RWFeatures.vartau_kurtosis_comparison">
+<code class="descname">vartau_kurtosis_comparison</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>max_tau=10</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.vartau_kurtosis_comparison" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate <cite>cell_kurtosis</cite> and <cite>diff_kurtosis</cite> for a range of possible
+time intervals <cite>tau</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.RWFeatures.moving_kurt_comparison">
+<code class="descname">moving_kurt_comparison</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>displacements</em>, <em>speed</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.moving_kurt_comparison" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare kurtosis only while cell is moving</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.RWFeatures.moving_kurt">
+<code class="descname">moving_kurt</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>max_tau=10</em>, <em>moving_range=range(1</em>, <em>11)</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.moving_kurt" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cell_ids</strong> (<em>dict</em>) – keyed by cell_id, values are lists of corrdinate tuples.</li>
+<li><strong>max_tau</strong> (<em>int</em>) – maximum time lag to consider for kurtosis calculations.</li>
+<li><strong>moving_range</strong> (<em>iterable</em>) – range of speeds to consider as a threshold for movement.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul>
+<li><p class="first"><strong>cell_moving_kurt</strong> (<em>triple dict raw kurtosis of all cells in cell_ids</em>) – keyed by speed threshold, tau, and cell_id
+cell_moving_kurt = {</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>speed1 <span class="classifier-delimiter">:</span> <span class="classifier">{</span></dt>
+<dd><dl class="first last docutils">
+<dt>tau1 :</dt>
+<dd><p class="first last">{cell_id1 : kurt
+…}</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>} …</p>
+</div></blockquote>
+<p>}</p>
+</li>
+<li><p class="first"><strong>diff_moving_kurt</strong> (<em>kurtosis of all cells, normalized by Rayleigh kurt</em>)</p>
+</li>
+<li><p class="first"><em>structured as above</em></p>
+</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.RWFeatures.displacement_props">
+<code class="descname">displacement_props</code><span class="sig-paren">(</span><em>cell_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.displacement_props" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates variance and skewness of the displacement distribution
+for each cell in cell_ids</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cell_ids</strong> (<em>dict of lists containing tuples of sequential XY coordinates</em>) – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>var</strong> (<em>dict keyed by cell_id with variance of displacement distribution</em>)</li>
+<li><strong>skew</strong> (<em>dict keyed by cell_ids with skew of displacement distribution</em>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.RWFeatures.calc_ngaussalpha">
+<code class="descname">calc_ngaussalpha</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.calc_ngaussalpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the non-Gaussian parameter alpha_2 of a given displacement
+distribution, X</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> (<em>array-like</em>) – distribution of displacements.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>alpha_2</strong> – non-Gaussian coefficient, floating point values.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>alpha_2 = &lt;dx^4&gt; / 3*&lt;dx^2&gt;^2 - 1</p>
+<p>effectively, a ratio of coeff* (kurtosis / variance)</p>
+<p>For a Gaussian distribution, alpha_2 = 0
+For non-Gaussian distributions, alpha_2 increases with the length
+of the tails</p>
+<p>Levy-like motion would be expected to have alpha_2 &gt; 0, while diffusive
+motion would be expected to have alpha_2 == 0</p>
+<p>Rayleigh alpha_2 ~= -0.33</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.RWFeatures.nongauss_coeff">
+<code class="descname">nongauss_coeff</code><span class="sig-paren">(</span><em>cell_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.nongauss_coeff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates non-Gaussian coefficient alpha_2 for all cells in cell_ids.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cell_ids</strong> (<em>dict</em>) – lists containing tuples of sequential XY coordinates.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>nongauss_coeff</strong> – keyed by cell_id, nonGauss coeff values.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.RWFeatures.largest_pow2">
+<code class="descname">largest_pow2</code><span class="sig-paren">(</span><em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.largest_pow2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds argmax_n 2**n &lt; <cite>num</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.RWFeatures.rescaled_range">
+<code class="descname">rescaled_range</code><span class="sig-paren">(</span><em>X</em>, <em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.rescaled_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds rescaled range &lt;R(n)/S(n)&gt; for all sub-series of size <cite>n</cite> in <cite>X</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.RWFeatures.hurst_mandelbrot">
+<code class="descname">hurst_mandelbrot</code><span class="sig-paren">(</span><em>cell_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.hurst_mandelbrot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the Hurst coefficient <cite>H</cite> for each cell in <cite>cell_ids</cite>.</p>
+<p class="rubric">Notes</p>
+<p>for E[R(n)/S(n)] = Cn**H as n –&gt; inf
+H : 0.5 - 1 ; long-term positive autocorrelation
+H : 0.5 ; fractal Brownian motion
+H : 0-0.5 ; long-term negative autocorrelation</p>
+<p>N.B. SEQUENCES MUST BE &gt;= 18 units long, otherwise
+linear regression for log(R/S) vs log(n) will have
+&lt; 3 points and cannot be performed</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.RWFeatures.dfa_all">
+<code class="descname">dfa_all</code><span class="sig-paren">(</span><em>cell_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.dfa_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs detrended fluctuation analysis on cell displacement series.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cell_ids</strong> (<em>dict of lists keyed by cell_id</em>) – </li>
+<li><strong>list represents a cell. lists contain sequential tuples</strong> (<em>ea.</em>) – </li>
+<li><strong>XY coordinates of a cell at a given timepoint</strong> (<em>containing</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>dfa_alpha</strong> (<em>dict keyed by cell_id, values are the alpha coefficient</em>)</li>
+<li><em>calculated by detrended fluctuation analysis</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">References</p>
+<p>Ping et. al., Mosaic organization of DNA nucleotides, 1994, Phys Rev E</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.RWFeatures.autocorr_all">
+<code class="descname">autocorr_all</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>max_tau=10</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.autocorr_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimates the autocorrelation coefficient for each series of cell
+displacements over a range of time lags.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cell_ids</strong> (<em>dict of lists keyed by cell_id</em>) – </li>
+<li><strong>list represents a cell. lists contain sequential tuples</strong> (<em>ea.</em>) – </li>
+<li><strong>XY coordinates of a cell at a given timepoint</strong> (<em>containing</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>autocorr</strong> (<em>dict of lists, containing autocorrelation coeffs for</em>)</li>
+<li><em>sequential time lags</em></li>
+<li><strong>qstats</strong> (<em>dict of lists containing Q-Statistics (Ljung-Box)</em>)</li>
+<li><strong>pvals</strong> (<em>dict of lists containing p-vals, as calculated from Q-Statistics</em>)</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Estimation method:
+<a class="reference external" href="https://en.wikipedia.org/wiki/Autocorrelation#Estimation">https://en.wikipedia.org/wiki/Autocorrelation#Estimation</a></p>
+<p>R(tau) = 1/(n-tau)*sigma**2 [sum(X_t - mu)*(X_t+tau - mu)] | t = [1,n-tau]</p>
+<p>X as a time series, mu as the mean of X, sigma**2 as variance of X
+tau as a given time lag (sometimes referred to as k in literature)</p>
+<p>Implementation uses statsmodels.tsa.stattools.acf()</p>
+<p>n.b. truncated to taus [1,10], to expand to more time lags, simply
+alter the indexing being loaded into the return dicts</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmstats.RWFeatures.partial_acorr_all">
+<code class="descname">partial_acorr_all</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>max_tau=10</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmstats.RWFeatures.partial_acorr_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimates the partial autocorrelation coefficient for each series of cell
+displacements over a range of time lags.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cell_ids</strong> (<em>dict</em>) – keyed by cell_id, values are lists of coordinate tuples.</li>
+<li><strong>max_tau</strong> (<em>int</em>) – maximum tau to estimate partial autocorrelation.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>partial_acorr</strong> – keyed by cell id, values are lists, containing autocorrelation coeffs
+for sequential time lags</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>n.b. truncated to taus [1,10], to expand to more time lags, simply
+alter the indexing being loaded into the return dicts.
+Implementation uses statsmodels.tsa.stattools.pacf()</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="hmdetail.html" class="btn btn-neutral float-right" title="heteromotility/hmdetail module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cliapi.html" class="btn btn-neutral" title="Command Line API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Jacob C. Kimmel.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.8',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

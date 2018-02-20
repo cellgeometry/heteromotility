@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>heteromotility/hmdetail module &mdash; Heteromotility 0.1.8 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Heteromotility 0.1.8 documentation" href="../index.html"/>
+        <link rel="up" title="API" href="index.html"/>
+        <link rel="next" title="heteromotility/hmsims module" href="hmsims.html"/>
+        <link rel="prev" title="heteromotility/hmstats module" href="hmstats.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Heteromotility
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#cli-usage">CLI Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#library-api">Library API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#motility-statistics-module">Motility Statistics Module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#path-subset-analysis-module">Path Subset Analysis Module</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">heteromotility/hmdetail module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#motility-simulation-module">Motility Simulation Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#i-o-module">I/O Module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Heteromotility</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">API</a> &raquo;</li>
+        
+      <li>heteromotility/hmdetail module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/fullapi/hmdetail.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="heteromotility-hmdetail-module">
+<h1>heteromotility/hmdetail module<a class="headerlink" href="#heteromotility-hmdetail-module" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-heteromotility.hmdetail"></span><dl class="class">
+<dt id="heteromotility.hmdetail.DetailedBalance">
+<em class="property">class </em><code class="descclassname">heteromotility.hmdetail.</code><code class="descname">DetailedBalance</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>min_split=20</em>, <em>tau_max=None</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmdetail.DetailedBalance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Splits cell paths into discrete segments and calculates
+motility statistics on these sub-segments.
+Allows ‘motility state’ transitions to be assessed within a single cell.</p>
+<dl class="attribute">
+<dt id="heteromotility.hmdetail.DetailedBalance.min_split">
+<code class="descname">min_split</code><a class="headerlink" href="#heteromotility.hmdetail.DetailedBalance.min_split" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – minimum length of a subpath for splitting.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmdetail.DetailedBalance.tau_max">
+<code class="descname">tau_max</code><a class="headerlink" href="#heteromotility.hmdetail.DetailedBalance.tau_max" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – maximum length of a subpath for splitting. &gt;= <cite>min_split</cite></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmdetail.DetailedBalance.cell_ids">
+<code class="descname">cell_ids</code><a class="headerlink" href="#heteromotility.hmdetail.DetailedBalance.cell_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – cell paths, keyed by an <cite>id</cite>, valued are a list of tuple (x,y) coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmdetail.DetailedBalance.split_ids">
+<code class="descname">split_ids</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>tau</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmdetail.DetailedBalance.split_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Splits cell paths into multiple discrete segments of length tau
+Returns a dict of lists where each list is a subpath for easy stat
+calculations with existing Heteromotility infrastructure</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cell_ids</strong> (<em>dict</em>) – cell paths, keyed by an <cite>id</cite>, valued are a list of tuple (x,y) coordinates.</li>
+<li><strong>tau</strong> (<em>int</em>) – time lag, size of each split path</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>split_ids</strong> – keyed by “cell_id-subpath_id”, valued as in <cite>cell_ids</cite></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmdetail.DetailedBalance.sliding_windows">
+<code class="descname">sliding_windows</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>tau=20</em>, <em>stride=1</em>, <em>max_windows=None</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmdetail.DetailedBalance.sliding_windows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates multiple tracks using a sliding window of length <cite>tau</cite>,
+shifted by <cite>stride</cite> for each frame until the track is finished or
+<cite>max_windows</cite> is reached.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cell_ids</strong> (<em>dict</em>) – cell paths, keyed by an <cite>id</cite>, valued are a list of tuple (x,y) coordinates.</li>
+<li><strong>tau</strong> (<em>int</em><em>, </em><em>optional</em>) – size of the sliding window in time step units.</li>
+<li><strong>stride</strong> (<em>int</em><em>, </em><em>optional</em>) – stride of the sliding window in time step units.</li>
+<li><strong>max_windows</strong> (<em>int</em><em>, </em><em>optional</em>) – maximum number of sliding windows to extract.
+if <cite>None</cite>, extracts the maximum number of windows across the track.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>sliding_ids</strong> – dict of lists, keyed by <cite>“cell_id-subpath_id”</cite> where <cite>subpath_id</cite> is
+equal to the window location, indexed from <cite>0</cite>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmdetail.DetailedBalance.multi_tau_split">
+<code class="descname">multi_tau_split</code><span class="sig-paren">(</span><em>cell_ids</em>, <em>tau_min=20</em>, <em>tau_max=None</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmdetail.DetailedBalance.multi_tau_split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes dict keyed by tau with split_ids for a range of time lags</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cell_ids</strong> (<em>dict</em>) – cell paths, keyed by an <cite>id</cite>, valued are a list of tuple (x,y) coordinates.</li>
+<li><strong>tau_min</strong> (<em>int</em>) – minimum time lag to consider</li>
+<li><strong>tau_max</strong> (<em>int</em><em>, </em><em>optional</em>) – maximum size of windows to be considered.
+defaults to <cite>len(cell_ids[cell_ids.keys()[0]])//2</cite>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>multi_split</strong> – keyes by window size <cite>tau</cite>, values by <cite>cell_ids</cite> dicts for each <cite>tau</cite>
+as generated by <cite>split_ids</cite>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmdetail.DetailedBalance.split_id_features">
+<code class="descname">split_id_features</code><span class="sig-paren">(</span><em>multi_split</em>, <em>output_dir</em>, <em>output_suffix=False</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmdetail.DetailedBalance.split_id_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates motility features for subsegments of cell paths.
+Exports data as ‘motility_statistics_split_$TAU.csv’
+where $TAU is the size of the segments being considered</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>multi_split</strong> (<em>dict</em>) – keyed by int window sizes <cite>tau</cite>, containing <cite>cell_id</cite> style dicts.</li>
+<li><strong>output_dir</strong> (<em>string</em>) – directory for output files.</li>
+<li><strong>output_suffix</strong> (<em>string</em>) – suffix for CSV outputs.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="hmsims.html" class="btn btn-neutral float-right" title="heteromotility/hmsims module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="hmstats.html" class="btn btn-neutral" title="heteromotility/hmstats module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Jacob C. Kimmel.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.8',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

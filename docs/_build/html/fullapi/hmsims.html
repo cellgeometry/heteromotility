@@ -1,0 +1,860 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>heteromotility/hmsims module &mdash; Heteromotility 0.1.8 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Heteromotility 0.1.8 documentation" href="../index.html"/>
+        <link rel="up" title="API" href="index.html"/>
+        <link rel="next" title="heteromotility/hmio module" href="hmio.html"/>
+        <link rel="prev" title="heteromotility/hmdetail module" href="hmdetail.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Heteromotility
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Tutorial</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#cli-usage">CLI Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#library-api">Library API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#motility-statistics-module">Motility Statistics Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#path-subset-analysis-module">Path Subset Analysis Module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#motility-simulation-module">Motility Simulation Module</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">heteromotility/hmsims module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#i-o-module">I/O Module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Heteromotility</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">API</a> &raquo;</li>
+        
+      <li>heteromotility/hmsims module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/fullapi/hmsims.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-heteromotility.hmsims">
+<span id="heteromotility-hmsims-module"></span><h1>heteromotility/hmsims module<a class="headerlink" href="#module-heteromotility.hmsims" title="Permalink to this headline">¶</a></h1>
+<p>Classes to generate simulated data sets for analysis, including
+1. Random walk simulations
+2. Biased random walk simulations
+3. Levy and power flight simulations</p>
+<dl class="class">
+<dt id="heteromotility.hmsims.RWSims">
+<em class="property">class </em><code class="descclassname">heteromotility.hmsims.</code><code class="descname">RWSims</code><span class="sig-paren">(</span><em>obj=100</em>, <em>length=100</em>, <em>bound_x=(-inf</em>, <em>inf)</em>, <em>bound_y=(-inf</em>, <em>inf)</em>, <em>speed_range=range(5</em>, <em>10)</em>, <em>bias_prop=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.RWSims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Simulates random walkers.</p>
+<dl class="attribute">
+<dt id="heteromotility.hmsims.RWSims.obj">
+<code class="descname">obj</code><a class="headerlink" href="#heteromotility.hmsims.RWSims.obj" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – number of walker objects to simulate.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.RWSims.length">
+<code class="descname">length</code><a class="headerlink" href="#heteromotility.hmsims.RWSims.length" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – number of time <em>steps</em> to simulate.
+i.e. length = total_time_points - 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">bound_x, bound_y</code></dt>
+<dd><p><em>tuple, (min, max), optional</em> – boundaries of X and Y dimensions for motion.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.RWSims.speed_range">
+<code class="descname">speed_range</code><a class="headerlink" href="#heteromotility.hmsims.RWSims.speed_range" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>iterable, optional</em> – range of mean displacement sizes to simulate</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.RWSims.bias_prop">
+<code class="descname">bias_prop</code><a class="headerlink" href="#heteromotility.hmsims.RWSims.bias_prop" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float, optional</em> – proportion of the time biased RWs move in the biased direction</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.RWSims.rw_paths">
+<code class="descname">rw_paths</code><a class="headerlink" href="#heteromotility.hmsims.RWSims.rw_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – unbiased random walk simulation paths.
+keyed by mean displacement size, valued by dicts in <cite>cell_ids</cite> format</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.RWSims.brw_paths">
+<code class="descname">brw_paths</code><a class="headerlink" href="#heteromotility.hmsims.RWSims.brw_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – biased random walk simulation paths.
+keyed by mean displacement size, valued by dicts in <cite>cell_ids</cite> format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmsims.RWSims.random_walk">
+<code class="descname">random_walk</code><span class="sig-paren">(</span><em>N</em>, <em>speed_mu=7.0</em>, <em>speed_sigma=None</em>, <em>origin=(0</em>, <em>0)</em>, <em>bound_x=(-inf</em>, <em>inf)</em>, <em>bound_y=(-inf</em>, <em>inf)</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.RWSims.random_walk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Models a single random walk given an origin, length, and stepsize.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>N</strong> (<em>length of walk to model</em>) – </li>
+<li><strong>speed_mu</strong> (<em>float</em><em>, </em><em>optional.</em>) – mean of Gaussian distribution speeds are sampled from</li>
+<li><strong>speed_sigma</strong> (<em>float</em><em>, </em><em>optional.</em>) – standard deviation of Gaussian distribution speeds are sampled from</li>
+<li><strong>origin</strong> (<em>tuple.</em>) – origin point, default = (0,0)</li>
+<li><strong>bound_y</strong> (<em>bound_x</em><em>,</em>) – (min, max) allowed values for X and Y coordinates.
+Useful to confine model to a specified box.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>model_path</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list containing sequential tuples of XY coordinates</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>step_size = rate = c = sqrt(x_step^2 + y_step^2) = sqrt(2*step^2)
+x_step = y_step = rate/sqrt(2)
+(Random Walks in Biology, 1992, Howard C. Berg)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmsims.RWSims.rwsim">
+<code class="descname">rwsim</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.RWSims.rwsim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates simulated object paths using an unbiased random walk model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj</strong> (<em>integer specifying the number of object paths to be simulated</em>) – </li>
+<li><strong>length</strong> (<em>integer specifying the length of each path to be simulated</em>) – </li>
+<li><strong>speed_range</strong> (<em>tuple containing integers of step sizes to use when</em>) – </li>
+<li><strong>models</strong> (<em>building</em>) – </li>
+<li><strong>bound_x</strong> (<em>tuple</em><em>, </em><em>optional.</em>) – (min, max) allowed values for X coordinates.
+Useful to confine model to a specified box.</li>
+<li><strong>bound_y</strong> (<em>tuple</em><em>, </em><em>optional.</em>) – (min, max) allowed values for Y coordinates.
+Useful to confine model to a specified box.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>rw_paths</strong> – keyed by speed, values with dicts in <cite>cell_ids</cite> format.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmsims.RWSims.biased_random_walk">
+<code class="descname">biased_random_walk</code><span class="sig-paren">(</span><em>N</em>, <em>speed_mu=7.0</em>, <em>speed_sigma=None</em>, <em>bias_prop=0.5</em>, <em>origin=(0</em>, <em>0)</em>, <em>bound_x=(-inf</em>, <em>inf)</em>, <em>bound_y=(-inf</em>, <em>inf)</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.RWSims.biased_random_walk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Models a set of random walks biased to move in one direction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>N</strong> (<em>int</em>) – length of walk to be modeled</li>
+<li><strong>speed_mu</strong> (<em>float</em>) – mean displacement size to be modeled</li>
+<li><strong>bias_prop</strong> (<em>float</em>) – proportion of the time an object moves in the direction of bias</li>
+<li><strong>origin</strong> (<em>array-like</em><em>, </em><em>len 2</em>) – origin point for the start of the walk to be modeled</li>
+<li><strong>bound_y</strong> (<em>bound_x</em><em>,</em>) – (min, max) allowed values for X and Y coordinates.
+Useful to confine model to a specified box.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>model_path</strong> – tuples, each containing an XY point.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Randomly selects in which direction to bias movement.
+Object will move in the direction of bias a proportion of the time
+specified in <cite>bias_prop</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmsims.RWSims.biased_rwsim">
+<code class="descname">biased_rwsim</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.RWSims.biased_rwsim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates simulated object paths using a biased random walk model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj</strong> (<em>int</em>) – number of object paths to be simulated.</li>
+<li><strong>length</strong> (<em>int</em>) – length of each path to be simulated.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>brw_paths</strong> – keyed by mean displacement, valued with <cite>cell_ids</cite> format dicts.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="heteromotility.hmsims.LevySims">
+<em class="property">class </em><code class="descclassname">heteromotility.hmsims.</code><code class="descname">LevySims</code><span class="sig-paren">(</span><em>obj=100</em>, <em>length=100</em>, <em>bound_x=(-inf</em>, <em>inf)</em>, <em>bound_y=(-inf</em>, <em>inf)</em>, <em>p_scale=range(25</em>, <em>30)</em>, <em>alpha=2.0</em>, <em>levy=False</em>, <em>levy_scale=range(1</em>, <em>5)</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.LevySims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Simulated power and true ‘Levy’ flier walker models.</p>
+<dl class="attribute">
+<dt id="heteromotility.hmsims.LevySims.obj">
+<code class="descname">obj</code><a class="headerlink" href="#heteromotility.hmsims.LevySims.obj" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – number of walker objects to simulate.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.LevySims.length">
+<code class="descname">length</code><a class="headerlink" href="#heteromotility.hmsims.LevySims.length" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – number of time <em>steps</em> to simulate.
+i.e. length = total_time_points - 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">bound_x, bound_y</code></dt>
+<dd><p><em>tuple, (min, max), optional</em> – boundaries of X and Y dimensions for motion.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.LevySims.p_scale">
+<code class="descname">p_scale</code><a class="headerlink" href="#heteromotility.hmsims.LevySims.p_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>iterable</em> – scaling values for power fliers. 25 = 5 px step mean.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.LevySims.alpha">
+<code class="descname">alpha</code><a class="headerlink" href="#heteromotility.hmsims.LevySims.alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float, optional</em> – alpha exponent for power distribution.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.LevySims.levy">
+<code class="descname">levy</code><a class="headerlink" href="#heteromotility.hmsims.LevySims.levy" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>boolean, optional</em> – simulate Levy fliers.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.LevySims.levy_scale">
+<code class="descname">levy_scale</code><a class="headerlink" href="#heteromotility.hmsims.LevySims.levy_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>iterable, optional</em> – scaling values for Levy fliers.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.LevySims.power_paths">
+<code class="descname">power_paths</code><a class="headerlink" href="#heteromotility.hmsims.LevySims.power_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – keyed by scale factor, valued with dicts in <cite>cell_ids</cite> format.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.LevySims.levy_paths">
+<code class="descname">levy_paths</code><a class="headerlink" href="#heteromotility.hmsims.LevySims.levy_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – keyed by scale factor, valued with dicts in <cite>cell_ids</cite> format.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmsims.LevySims.power_flier">
+<code class="descname">power_flier</code><span class="sig-paren">(</span><em>N</em>, <em>x_min=0.1</em>, <em>alpha=2.0</em>, <em>scale_coeff=25</em>, <em>origin=(0</em>, <em>0)</em>, <em>bound_x=(-inf</em>, <em>inf)</em>, <em>bound_y=(-inf</em>, <em>inf)</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.LevySims.power_flier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Models a power flier path.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>N</strong> (<em>int</em>) – number of steps in the flight</li>
+<li><strong>x_min</strong> (<em>int</em>) – integer value, minimum step size</li>
+<li><strong>scale_coeff</strong> (<em>float</em>) – scaling coefficient for step sizes</li>
+<li><strong>alpha</strong> (<em>float</em>) – alpha exponent for power flier model, see Notes</li>
+<li><strong>origin</strong> (<em>array-like</em>) – initial site of walk, len 2</li>
+<li><strong>bound_y</strong> (<em>bound_x</em><em>,</em>) – (min, max) allowed values for X and Y coordinates.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>model_path</strong> – tuples of XY coordinates</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Directions are chosen randomly, as in a random walk
+Step sizes however are chosen according to the distribution:</p>
+<blockquote>
+<div>P(l_j) ~ l_j**(-a)
+where a is a parameter in the range 1 &lt; u &lt;= 3</div></blockquote>
+<p>Defaults to a = 2 as the optimal parameter for foraging behavior
+see : Viswanathan 1999, Nature</p>
+<p>Obtaining Levy distributed variables :</p>
+<p>To transform uniformly distributed random variable
+into another distribution, use inverse cum. dist. func. (CDF)</p>
+<p>if F is CDF corresponding to probability density of variable f and u
+is a uniformly distributed random variable on [0,1]</p>
+<p>x = F^-1(u)
+for pure power law distribution P(l) = l**-a
+F(x) = 1 - ( x / x_min )
+where x_min is a lower bound on the random variable</p>
+<p>F^-1(u) = x_min(1 - u)^(-1/a)</p>
+<p>See: (Devroye 1986, Non-uniform random variable generation)</p>
+<p>or</p>
+<p>X = F^-1(U) = c / ( phi^-1(1-U/2) )**2 + mu</p>
+<p>c : scaling parameter
+Phi(x) : CDF of Gaussian distribution
+mu : location</p>
+<p>for a pure Levy distribution</p>
+<p>see <a class="reference external" href="http://www.math.uah.edu/stat/special/Levy.html">http://www.math.uah.edu/stat/special/Levy.html</a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmsims.LevySims.power_sim">
+<code class="descname">power_sim</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.LevySims.power_sim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates simulated object paths using a levy flight model with
+a power law distribution of displacements</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj</strong> (<em>int</em>) – number of object paths to be simulated</li>
+<li><strong>length</strong> (<em>int</em>) – length of each path to be simulated</li>
+<li><strong>scale_range</strong> (<em>iterable</em>) – scaling factors to simulate</li>
+<li><strong>bound_y</strong> (<em>bound_x</em><em>,</em>) – (min, max) allowed values for X and Y coordinates.</li>
+<li><strong>alpha</strong> (<em>float</em>) – alpha exponent for power flier model, see Notes</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>levy_paths</strong> (<em>dict keyed by obj id, containing lists of tuples, each tuple</em>)</li>
+<li><em>specifying the XY position of a simulated object at a given timepoint</em> – levy_paths = {
+0: [ (x1,y1), (x2,y2)…(x_n, y_n) ]
+1: [ (x1,y1), (x2,y2)…(x_n, y_n) ]
+…
+}</li>
+<li><em>Distribution with scale factor = 25 has mean = 5</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmsims.LevySims.levy_flier">
+<code class="descname">levy_flier</code><span class="sig-paren">(</span><em>N</em>, <em>scale_coeff=1</em>, <em>origin=(0</em>, <em>0)</em>, <em>bound_x=(-inf</em>, <em>inf)</em>, <em>bound_y=(-inf</em>, <em>inf)</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.LevySims.levy_flier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a levy flight path beginning at the origin, taking N steps,
+with step sizes pulled from a true Levy distribution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>N</strong> (<em>number of steps in the flight</em>) – </li>
+<li><strong>step_min</strong> (<em>integer value</em><em>, </em><em>minimum step size</em>) – </li>
+<li><strong>origin</strong> (<em>initial site of walk</em>) – </li>
+<li><strong>= parameter for probability distribution of step sizes</strong> (<em>u</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>model_path</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">a list containing tuples of XY coordinates</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>scale = 2, median disp = 4.4
+scale = ~2.3 has a median displacement of 5 units</p>
+<p>Directions are chosen randomly, as in a random walk
+Step sizes however are chosen according to the distribution:</p>
+<blockquote>
+<div>P(l_j) ~ l_j**(-a)
+where a is a parameter in the range 1 &lt; u &lt;= 3</div></blockquote>
+<p>Defaults to a = 2 as the optimal parameter for foraging behavior
+see : Viswanathan 1999, Nature</p>
+<p>Obtaining Levy distributed random variables:</p>
+<p>To transform uniformly distributed random variable
+into another distribution, use inverse cum. dist. func. (CDF)</p>
+<p>if F is CDF corresponding to probability density of variable f and u
+is a uniformly distributed random variable on [0,1]</p>
+<p>x = F^-1(u)
+for pure power law distribution P(l) = l**-a
+F(x) = 1 - ( x / x_min )
+where x_min is a lower bound on the random variable</p>
+<p>F^-1(u) = x_min(1 - u)^(-1/a)</p>
+<p>See: (Devroye 1986, Non-uniform random variable generation)</p>
+<p>or</p>
+<p>X = F^-1(U) = c / ( phi^-1(1-U/2) )**2 + mu</p>
+<p>c : scaling parameter
+Phi(x) : CDF of Gaussian distribution
+mu : location</p>
+<p>for a pure Levy distribution</p>
+<p class="rubric">References</p>
+<p>[1] <a class="reference external" href="http://www.math.uah.edu/stat/special/Levy.html">http://www.math.uah.edu/stat/special/Levy.html</a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmsims.LevySims.levy_sim">
+<code class="descname">levy_sim</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.LevySims.levy_sim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates simulated object paths using a levy flight model with a true
+Levy distribution of displacements</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj</strong> (<em>integer specifying the number of object paths to be simulated</em>) – </li>
+<li><strong>length</strong> (<em>integer specifying the length of each path to be simulated</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>levy_paths</strong> – keyed by scale factor, values are <cite>cell_ids</cite> format dicts</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="heteromotility.hmsims.fBmsims">
+<em class="property">class </em><code class="descclassname">heteromotility.hmsims.</code><code class="descname">fBmsims</code><span class="sig-paren">(</span><em>obj=100</em>, <em>length=100</em>, <em>H=0.8</em>, <em>bound_x=(-inf</em>, <em>inf)</em>, <em>bound_y=(-inf</em>, <em>inf)</em>, <em>scale_range=range(1</em>, <em>5)</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.fBmsims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Simulates fractal Brownian motion walkers.</p>
+<dl class="attribute">
+<dt id="heteromotility.hmsims.fBmsims.obj">
+<code class="descname">obj</code><a class="headerlink" href="#heteromotility.hmsims.fBmsims.obj" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – number of objects to simulate.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.fBmsims.length">
+<code class="descname">length</code><a class="headerlink" href="#heteromotility.hmsims.fBmsims.length" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – length of simulated tracks.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.fBmsims.H">
+<code class="descname">H</code><a class="headerlink" href="#heteromotility.hmsims.fBmsims.H" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> – Hurst coefficient for fractal Brownian process</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">bound_x, bound_y</code></dt>
+<dd><p><em>tuple, optional.</em> – (min, max) allowed values for X and Y coordinates.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.fBmsims.scale_range">
+<code class="descname">scale_range</code><a class="headerlink" href="#heteromotility.hmsims.fBmsims.scale_range" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>iterable</em> – scaling values for fBm walkers. 0.277 = 5 px step mean.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.fBmsims.fbm_paths">
+<code class="descname">fbm_paths</code><a class="headerlink" href="#heteromotility.hmsims.fBmsims.fbm_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – keyed by scale factor, values are <cite>cell_ids</cite> format dicts.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmsims.fBmsims.fbm_mat">
+<code class="descname">fbm_mat</code><span class="sig-paren">(</span><em>gridN: int = 100</em>, <em>T: int = 100</em>, <em>H: float = 0.99</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#heteromotility.hmsims.fBmsims.fbm_mat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a Cholesky decomposition of a covariance matrix</p>
+<p>Gamma = (R(i,j), i, j) for i,j = 0…n</p>
+<p>where n is a grid size parameter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>gridN</strong> (<em>int</em>) – size of grid to generate for the covariance matrix</li>
+<li><strong>T</strong> (<em>int</em>) – length of displacement series to generate</li>
+<li><strong>H</strong> (<em>float</em><em>, </em><em>(</em><em>0</em><em>,</em><em>1</em><em>)</em>) – hurst parameter (0,1)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> – series of displacements following fBm for the given Hurst index</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">np.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmsims.fBmsims.fbm_series">
+<code class="descname">fbm_series</code><span class="sig-paren">(</span><em>gridN: int = 100</em>, <em>T: int = 100</em>, <em>H: float = 0.99</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#heteromotility.hmsims.fBmsims.fbm_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a series of displacements simulating a fractal
+Brownian process with a given Hurst parameter of length <cite>T</cite> using
+the Cholesky decomposition method [1].</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>gridN</strong> (<em>int</em>) – size of grid to generate for the covariance matrix</li>
+<li><strong>T</strong> (<em>int</em>) – length of displacement series to generate</li>
+<li><strong>H</strong> (<em>float</em><em>, </em><em>(</em><em>0</em><em>,</em><em>1</em><em>)</em>) – hurst parameter (0,1)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>u</strong> – series of a fBm process.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">np.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<ol class="arabic simple">
+<li>Generate a matrix Gamma = [ R(t_i,t_j), for i,j = 0…n ]</li>
+<li>take the cholesky decomposition of Gamma</li>
+<li>Find Sigma = cholesky_Gamme**0.5</li>
+<li>Generate a vector v or length n with Gaussian distributed values</li>
+<li>vector u = Sigma * v represents a fBm series</li>
+</ol>
+<p class="rubric">References</p>
+<ol class="upperalpha simple" start="20">
+<li>Dieker, Simulation of fractional Brownian motion, 2004</li>
+</ol>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmsims.fBmsims.fbm_walker">
+<code class="descname">fbm_walker</code><span class="sig-paren">(</span><em>N</em>, <em>scale=1</em>, <em>H=0.99</em>, <em>origin=(0</em>, <em>0)</em>, <em>bound_x=(-inf</em>, <em>inf)</em>, <em>bound_y=(-inf</em>, <em>inf)</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.fBmsims.fbm_walker" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmsims.fBmsims.fbm_sim">
+<code class="descname">fbm_sim</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.fBmsims.fbm_sim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates simulated object paths using a fractal Brownian motion model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj</strong> (<em>integer specifying the number of object paths to be simulated</em>) – </li>
+<li><strong>length</strong> (<em>integer specifying the length of each path to be simulated</em>) – </li>
+<li><strong>H</strong> (<em>Hurst coefficient for generation of fBm displacement series</em>) – </li>
+<li><strong>scale_range</strong> (<em>range of scales to use</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>fbm_paths</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict keyed by scale, values are <cite>cell_ids</cite> format dicts.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>scale = 0.277 is equivalent to mean displacement = 5 units</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="heteromotility.hmsims.MultiSim">
+<em class="property">class </em><code class="descclassname">heteromotility.hmsims.</code><code class="descname">MultiSim</code><span class="sig-paren">(</span><em>obj=1000</em>, <em>tau=20</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.MultiSim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Simulates objects that switch motion model state.</p>
+<dl class="attribute">
+<dt id="heteromotility.hmsims.MultiSim.obj">
+<code class="descname">obj</code><a class="headerlink" href="#heteromotility.hmsims.MultiSim.obj" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – number of object paths to be simulated.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.MultiSim.tau">
+<code class="descname">tau</code><a class="headerlink" href="#heteromotility.hmsims.MultiSim.tau" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – length of each state to be simulated.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.MultiSim.pwr2fbm">
+<code class="descname">pwr2fbm</code><a class="headerlink" href="#heteromotility.hmsims.MultiSim.pwr2fbm" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict.</em> – power walkers switching to fractal Brownian motion after <cite>tau</cite>.
+keyed by object id, values are lists of coordinate tuples.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.MultiSim.pwr2urw">
+<code class="descname">pwr2urw</code><a class="headerlink" href="#heteromotility.hmsims.MultiSim.pwr2urw" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict.</em> – power walkers switching to unbiased random walks after <cite>tau</cite>.
+keyed by object id, values are lists of coordinate tuples.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heteromotility.hmsims.MultiSim.fbm2urw">
+<code class="descname">fbm2urw</code><a class="headerlink" href="#heteromotility.hmsims.MultiSim.fbm2urw" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict.</em> – fractal Brownian motion switching to unbiased random walks after <cite>tau</cite>.
+keyed by object id, values are lists of coordinate tuples.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmsims.MultiSim.join_paths">
+<code class="descname">join_paths</code><span class="sig-paren">(</span><em>ids1</em>, <em>ids2</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.MultiSim.join_paths" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmsims.MultiSim.power_fbm">
+<code class="descname">power_fbm</code><span class="sig-paren">(</span><em>obj=1000</em>, <em>tau=20</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.MultiSim.power_fbm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmsims.MultiSim.power_urw">
+<code class="descname">power_urw</code><span class="sig-paren">(</span><em>obj=1000</em>, <em>tau=20</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.MultiSim.power_urw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="heteromotility.hmsims.MultiSim.fbm_rw">
+<code class="descname">fbm_rw</code><span class="sig-paren">(</span><em>obj=1000</em>, <em>tau=20</em><span class="sig-paren">)</span><a class="headerlink" href="#heteromotility.hmsims.MultiSim.fbm_rw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="hmio.html" class="btn btn-neutral float-right" title="heteromotility/hmio module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="hmdetail.html" class="btn btn-neutral" title="heteromotility/hmdetail module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Jacob C. Kimmel.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.8',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

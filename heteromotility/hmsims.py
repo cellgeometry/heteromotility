@@ -1,3 +1,10 @@
+'''
+Classes to generate simulated data sets for analysis, including
+1. Random walk simulations
+2. Biased random walk simulations
+3. Levy and power flight simulations
+'''
+
 from __future__ import division
 import random
 from .hmstats import GeneralFeatures, RWFeatures, MSDFeatures
@@ -7,35 +14,64 @@ import numpy as np
 from functools import partial
 from multiprocessing import Pool
 
-
-'''
-#---------------------------
-# MODULE CONTENTS
-#---------------------------
-Classes to generate simulated data sets for analysis, including
-1. Random walk simulations
-2. Biased random walk simulations
-3. Levy and power flight simulations
-
-#---------------------------
-# To Do
-#---------------------------
-
-1. Parallelize simulations with multiprocess.Pool.map() and functools.partial()
-
-'''
-
-
 class RWSims(object):
-    def __init__(self, obj = 100, length = 100, bound_x=(-np.Inf, np.Inf), bound_y=(-np.Inf, np.Inf), speed_range=range(5,10), bias_prop=0.5):
-        self.rw_paths = self.rwsim(obj, length, bound_x=bound_x, bound_y=bound_y, speed_range=speed_range)
-        self.brw_paths = self.biased_rwsim(obj, length, bound_x=bound_x, bound_y=bound_y, speed_range=speed_range, bias_prop=bias_prop)
+    '''
+    Simulates random walkers.
 
-    def random_walk(self, N, speed_mu = 7.0, speed_sigma = None, origin = (0,0), bound_x=(-np.Inf, np.Inf), bound_y=(-np.Inf, np.Inf)):
-        import numpy as np
+    Attributes
+    ----------
+    obj : int
+        number of walker objects to simulate.
+    length : int
+        number of time *steps* to simulate.
+        i.e. length = total_time_points - 1
+    bound_x, bound_y : tuple, (min, max), optional
+        boundaries of X and Y dimensions for motion.
+    speed_range : iterable, optional
+        range of mean displacement sizes to simulate
+    bias_prop : float, optional
+        proportion of the time biased RWs move in the biased direction
+    rw_paths : dict
+        unbiased random walk simulation paths.
+        keyed by mean displacement size, valued by dicts in `cell_ids` format
+    brw_paths : dict
+        biased random walk simulation paths.
+        keyed by mean displacement size, valued by dicts in `cell_ids` format
+    '''
+    def __init__(self, obj = 100, length = 100,
+                bound_x=(-np.Inf, np.Inf), bound_y=(-np.Inf, np.Inf),
+                speed_range=range(5,10), bias_prop=0.5):
         '''
-        Models random walk given an origin, length N, step size : rate
-        abbreviated from implementation in hmstats.RWFeatures
+        Simulates unbiased and biased random walkers.
+
+        Parameters
+        ----------
+        obj : int
+            number of walker objects to simulate.
+        length : int
+            number of time *steps* to simulate.
+            i.e. length = total_time_points - 1
+        bound_x, bound_y : tuple, (min, max), optional
+            boundaries of X and Y dimensions for motion.
+        speed_range : iterable, optional
+            range of mean displacement sizes to simulate
+        bias_prop : float, optional
+        '''
+
+        self.obj = obj
+        self.length = length
+        self.bound_x = bound_x
+        self.bound_y = bound_y
+        self.speed_range = speed_range
+        self.bias_prop = bias_prop
+
+        self.rw_paths = self.rwsim()
+        self.brw_paths = self.biased_rwsim()
+
+    def random_walk(self, N, speed_mu = 7.0, speed_sigma = None, origin = (0,0),
+                    bound_x=(-np.Inf, np.Inf), bound_y=(-np.Inf, np.Inf)):
+        '''
+        Models a single random walk given an origin, length, and stepsize.
 
         Parameters
         -------------
@@ -46,11 +82,8 @@ class RWSims(object):
             standard deviation of Gaussian distribution speeds are sampled from
         origin : tuple.
             origin point, default = (0,0)
-        bound_x : tuple, optional.
-            (min, max) allowed values for X coordinates.
-            Useful to confine model to a specified box.
-        bound_y : tuple, optional.
-            (min, max) allowed values for Y coordinates.
+        bound_x, bound_y : tuple, optional.
+            (min, max) allowed values for X and Y coordinates.
             Useful to confine model to a specified box.
 
         Returns
@@ -82,17 +115,6 @@ class RWSims(object):
 
             step = (float(dx), float(dy))
 
-            # vectors = [ (0, rate), (0, -rate), (rate, 0), (-rate, 0) ]
-            # walk = np.random.random()
-            # if 0 <= walk < 0.25:
-            #     step = vectors[0]
-            # elif 0.25 <= walk < 0.50:
-            #     step = vectors[1]
-            # elif 0.50 <= walk < 0.75:
-            #     step = vectors[2]
-            # else:
-            #     step = vectors[3]
-
             try_x = model_path[-1][0] + step[0]
             try_y = model_path[-1][1] + step[1]
             if bound_x[0] < try_x < bound_x[1] and bound_y[0] < try_y < bound_y[1]:
@@ -104,7 +126,7 @@ class RWSims(object):
 
         return model_path
 
-    def rwsim(self, obj, length, speed_range = range(5, 16), bound_x=(-np.Inf, np.Inf), bound_y=(-np.Inf, np.Inf)):
+    def rwsim(self):
         '''
         Generates simulated object paths using an unbiased random walk model
 
@@ -123,22 +145,13 @@ class RWSims(object):
 
         Returns
         ------------
-        rw_paths : dict keyed by speed, containing dicts keyed by obj id,
-        containing lists of tuples, each tuple
-        specifying the XY position of a simulated object at a given timepoint
-            rw_paths =
-            {
-            speed_i : {0: [ (x1,y1), (x2,y2)...(x_n, y_n) ]
-                        1: [ (x1,y1), (x2,y2)...(x_n, y_n) ]
-                        ...},
-            speed_i+1 : ...,
-            ...
-            }
+        rw_paths : dict
+            keyed by speed, values with dicts in `cell_ids` format.
         '''
 
         rw_paths = {}
 
-        for speed in speed_range:
+        for speed in self.speed_range:
             rw_paths[speed] = {}
 
             '''
@@ -154,37 +167,46 @@ class RWSims(object):
             '''
 
             i = 0
-            while i < obj:
-                model_path = self.random_walk(N = length, speed_mu = speed, origin = (0,0), bound_x=bound_x, bound_y=bound_y)
+            while i < self.obj:
+                model_path = self.random_walk(N = self.length,
+                                speed_mu = speed,
+                                origin = (0,0),
+                                bound_x=self.bound_x, bound_y=self.bound_y)
                 rw_paths[speed][i] = model_path
                 i += 1
 
         return rw_paths
 
-    def biased_random_walk(self, N, speed_mu = 7.0, speed_sigma = None, bias_prop = 0.5 , origin = (0,0), bound_x=(-np.Inf, np.Inf), bound_y=(-np.Inf, np.Inf)):
-        import numpy as np
+    def biased_random_walk(self, N, speed_mu = 7.0, speed_sigma = None,
+            bias_prop = 0.5 , origin = (0,0),
+            bound_x=(-np.Inf, np.Inf), bound_y=(-np.Inf, np.Inf)):
         '''
-        * Models a set of random walks biased to move in one direction
-        * Randomly selects in which direction to bias movement
-        * Object will move in the direction of bias a proportion of the time
-        specified in bias_prop
+        Models a set of random walks biased to move in one direction.
 
         Parameters
-        ------------
-        N : length of walk to be modeled
-        rate : step size to be modeled
-        bias_prop : proportion of the time an object moves in the direction of bias
-        origin : origin point for the start of the walk to be modeled
-        bound_x : tuple, optional.
-            (min, max) allowed values for X coordinates.
+        ----------
+        N : int
+            length of walk to be modeled
+        speed_mu : float
+            mean displacement size to be modeled
+        bias_prop : float
+            proportion of the time an object moves in the direction of bias
+        origin : array-like, len 2
+            origin point for the start of the walk to be modeled
+        bound_x, bound_y : tuple, optional.
+            (min, max) allowed values for X and Y coordinates.
             Useful to confine model to a specified box.
-        bound_y : tuple, optional.
-            (min, max) allowed values for Y coordinates.
-            Useful to confine model to a specified box.
-        Returns
-        ------------
-        model_path : list of tuples, each containing an XY point
 
+        Returns
+        -------
+        model_path : list
+            tuples, each containing an XY point.
+
+        Notes
+        -----
+        Randomly selects in which direction to bias movement.
+        Object will move in the direction of bias a proportion of the time
+        specified in `bias_prop`.
         '''
         model_path = [origin]
         if speed_sigma == None:
@@ -211,22 +233,6 @@ class RWSims(object):
 
             step = (float(dx), float(dy))
 
-            # walk = np.random.random()
-            # vectors = [ (0, rate), (0, -rate), (rate, 0), (-rate, 0) ]
-            # bias = vectors[bias_choice]
-            # vectors.pop(bias_choice)
-            # unbiased_prop = 1-bias_prop
-            # break1 = bias_prop + (unbiased_prop/3)
-            # break2 = bias_prop + 2*(unbiased_prop/3)
-            # if walk <= bias_prop:
-            #     step = bias
-            # elif bias_prop < walk <= break1:
-            #     step = vectors[0]
-            # elif break1 < walk <= break2:
-            #     step = vectors[1]
-            # else:
-            #     step = vectors[2]
-
             try_x = model_path[-1][0] + step[0]
             try_y = model_path[-1][1] + step[1]
             if bound_x[0] < try_x < bound_x[1] and bound_y[0] < try_y < bound_y[1]:
@@ -235,68 +241,133 @@ class RWSims(object):
             else:
                 pass
 
-
         return model_path
 
-    def biased_rwsim(self, obj, length, speed_range = range(5,16), bound_x=(-np.Inf, np.Inf), bound_y=(-np.Inf, np.Inf), bias_prop=0.5):
+    def biased_rwsim(self):
         '''
-        Generates simulated object paths using a biased random walk model
+        Generates simulated object paths using a biased random walk model.
 
         Parameters
         ------------
-        obj : integer specifying the number of object paths to be simulated
-        length : integer specifying the length of each path to be simulated
+        obj : int
+            number of object paths to be simulated.
+        length : int
+            length of each path to be simulated.
 
         Returns
         ------------
-        brw_paths : dict keyed by obj id, containing lists of tuples, each tuple
-        specifying the XY position of a simulated object at a given timepoint
-            rw_paths = {
-            0: [ (x1,y1), (x2,y2)...(x_n, y_n) ]
-            1: [ (x1,y1), (x2,y2)...(x_n, y_n) ]
-            ...
-            }
+        brw_paths : dict
+            keyed by mean displacement, valued with `cell_ids` format dicts.
         '''
 
         brw_paths = {}
 
-        for speed in speed_range:
+        for speed in self.speed_range:
             brw_paths[speed] = {}
             i = 0
-            while i < obj:
-                model_path = self.biased_random_walk(N = length, speed_mu = speed, bias_prop = bias_prop, origin = (0,0), bound_x=bound_x, bound_y=bound_y)
+            while i < self.obj:
+                model_path = self.biased_random_walk(N = self.length, speed_mu = speed,
+                                bias_prop = self.bias_prop, origin = (0,0),
+                                bound_x=self.bound_x, bound_y=self.bound_y)
                 brw_paths[speed][i] = model_path
                 i += 1
 
         return brw_paths
 
 class LevySims(object):
+    '''
+    Simulated power and true 'Levy' flier walker models.
+
+    Attributes
+    ----------
+    obj : int
+        number of walker objects to simulate.
+    length : int
+        number of time *steps* to simulate.
+        i.e. length = total_time_points - 1
+    bound_x, bound_y : tuple, (min, max), optional
+        boundaries of X and Y dimensions for motion.
+    p_scale : iterable
+        scaling values for power fliers. 25 = 5 px step mean.
+    alpha : float, optional
+        alpha exponent for power distribution.
+    levy : boolean, optional
+        simulate Levy fliers.
+    levy_scale : iterable, optional
+        scaling values for Levy fliers.
+    power_paths : dict
+        keyed by scale factor, valued with dicts in `cell_ids` format.
+    levy_paths : dict
+        keyed by scale factor, valued with dicts in `cell_ids` format.
+    '''
+
     def __init__(self, obj = 100, length = 100,
                 bound_x=(-np.Inf, np.Inf), bound_y=(-np.Inf, np.Inf),
-                p_scale = range(25,30), alpha = 2.000, levy=False, levy_scale = range(1,5)):
+                p_scale = range(25,30), alpha = 2.000,
+                levy=False, levy_scale = range(1,5)):
         '''
         Simulated optimal power and true 'Levy' flier walker models.
 
         Parameters
         ----------
-        obj : integer. number of objects to simulate.
-        length : integer. length of simulated tracks.
-        bound_x : tuple, (min, max). bounding values on the x axis.
-        bound_y : tuple, (min, max). bounding values on the y axis.
-        p_scale : iterable. scaling values for power fliers. 25 = 5 px step mean.
-        alpha : float. alpha exponent for power distribution.
-        levy : boolean. simulate Levy fliers.
-        levy_scale : iterable. scaling values for Levy fliers.
+        obj : int
+            number of objects to simulate.
+        length : int
+            length of simulated tracks.
+        bound_x, bound_y : tuple, optional.
+            (min, max) allowed values for X and Y coordinates.
+        p_scale : iterable
+            scaling values for power fliers. 25 = 5 px step mean.
+        alpha : float, optional
+            alpha exponent for power distribution.
+        levy : boolean, optional
+            simulate Levy fliers.
+        levy_scale : iterable, optional
+            scaling values for Levy fliers.
+
+        Notes
+        -----
+        `alpha = 2` is an optimized random searching agent, Viswanathan 1999.
         '''
-        self.power_paths = self.power_sim(obj, length, bound_x=bound_x, bound_y=bound_y, scale_range = p_scale, alpha=alpha)
-        if levy:
+        self.obj = obj
+        self.length = length
+        self.bound_x = bound_x
+        self.bound_y = bound_y
+        self.p_scale = p_scale
+        self.alpha = alpha
+        self.levy = levy
+        self.levy_scale = levy_scale
+
+        self.power_paths = self.power_sim()
+        if self.levy:
             self.levy_paths = self.levy_sim(obj, length, bound_x=bound_x, bound_y=bound_y, scale_range = levy_scale)
 
     def power_flier( self, N, x_min = 0.1, alpha = 2.000, scale_coeff=25, origin = (0,0), bound_x=(-np.Inf, np.Inf), bound_y=(-np.Inf, np.Inf) ):
         '''
-        Defines a levy flight path beginning at the origin, taking N steps,
-        with step sizes pulled from a power law distribution
+        Models a power flier path.
 
+        Parameters
+        ----------
+        N : int
+            number of steps in the flight
+        x_min : int
+            integer value, minimum step size
+        scale_coeff : float
+            scaling coefficient for step sizes
+        alpha : float
+            alpha exponent for power flier model, see Notes
+        origin : array-like
+            initial site of walk, len 2
+        bound_x, bound_y : tuple, optional.
+            (min, max) allowed values for X and Y coordinates.
+
+        Returns
+        -------
+        model_path : list
+            tuples of XY coordinates
+
+        Notes
+        -----
         Directions are chosen randomly, as in a random walk
         Step sizes however are chosen according to the distribution:
 
@@ -306,8 +377,8 @@ class LevySims(object):
         Defaults to a = 2 as the optimal parameter for foraging behavior
         see : Viswanathan 1999, Nature
 
-        Obtaining Levy distributed random variables
-        -------------
+        Obtaining Levy distributed variables :
+
         To transform uniformly distributed random variable
         into another distribution, use inverse cum. dist. func. (CDF)
 
@@ -334,17 +405,6 @@ class LevySims(object):
         for a pure Levy distribution
 
         see http://www.math.uah.edu/stat/special/Levy.html
-
-        Parameters
-        -------------
-        N : number of steps in the flight
-        step_min : integer value, minimum step size
-        origin : initial site of walk
-        u = parameter for probability distribution of step sizes
-
-        Returns
-        -------------
-        model_path : a list containing tuples of XY coordinates
         '''
 
         model_path = [ origin ]
@@ -374,18 +434,26 @@ class LevySims(object):
 
         return model_path
 
-    def power_sim(self, obj, length, scale_range = range(25,35), bound_x=(-np.Inf, np.Inf), bound_y=(-np.Inf, np.Inf), alpha = 2.000):
+    def power_sim(self):
         '''
         Generates simulated object paths using a levy flight model with
         a power law distribution of displacements
 
         Parameters
-        ------------
-        obj : integer specifying the number of object paths to be simulated
-        length : integer specifying the length of each path to be simulated
+        ----------
+        obj : int
+            number of object paths to be simulated
+        length : int
+            length of each path to be simulated
+        scale_range : iterable
+            scaling factors to simulate
+        bound_x, bound_y : tuple, optional.
+            (min, max) allowed values for X and Y coordinates.
+        alpha : float
+            alpha exponent for power flier model, see Notes
 
         Returns
-        ------------
+        -------
         levy_paths : dict keyed by obj id, containing lists of tuples, each tuple
         specifying the XY position of a simulated object at a given timepoint
             levy_paths = {
@@ -399,11 +467,12 @@ class LevySims(object):
 
         power_paths = {}
 
-        for scale in scale_range:
+        for scale in self.p_scale:
             power_paths[scale] = {}
             i = 0
-            while i < obj:
-                model_path = self.power_flier(N = length, scale_coeff=scale, bound_x=bound_x, bound_y=bound_y, alpha = alpha)
+            while i < self.obj:
+                model_path = self.power_flier(N = self.length, scale_coeff=scale,
+                            bound_x=self.bound_x, bound_y=self.bound_y, alpha = self.alpha)
                 power_paths[scale][i] = model_path
                 i += 1
 
@@ -414,6 +483,19 @@ class LevySims(object):
         Defines a levy flight path beginning at the origin, taking N steps,
         with step sizes pulled from a true Levy distribution
 
+        Parameters
+        ----------
+        N : number of steps in the flight
+        step_min : integer value, minimum step size
+        origin : initial site of walk
+        u = parameter for probability distribution of step sizes
+
+        Returns
+        -------
+        model_path : a list containing tuples of XY coordinates
+
+        Notes
+        -----
         scale = 2, median disp = 4.4
         scale = ~2.3 has a median displacement of 5 units
 
@@ -426,8 +508,8 @@ class LevySims(object):
         Defaults to a = 2 as the optimal parameter for foraging behavior
         see : Viswanathan 1999, Nature
 
-        Obtaining Levy distributed random variables
-        -------------
+        Obtaining Levy distributed random variables:
+
         To transform uniformly distributed random variable
         into another distribution, use inverse cum. dist. func. (CDF)
 
@@ -453,18 +535,9 @@ class LevySims(object):
 
         for a pure Levy distribution
 
-        see http://www.math.uah.edu/stat/special/Levy.html
-
-        Parameters
-        -------------
-        N : number of steps in the flight
-        step_min : integer value, minimum step size
-        origin : initial site of walk
-        u = parameter for probability distribution of step sizes
-
-        Returns
-        -------------
-        model_path : a list containing tuples of XY coordinates
+        References
+        ----------
+        [1] http://www.math.uah.edu/stat/special/Levy.html
         '''
         from scipy.stats import levy
 
@@ -485,17 +558,6 @@ class LevySims(object):
 
             step = (float(dx), float(dy))
 
-            # vectors = [ (0, rate), (0, -rate), (rate, 0), (-rate, 0) ]
-            # walk = random.random()
-            # if 0 <= walk < 0.25:
-            #     step = vectors[0]
-            # elif 0.25 <= walk < 0.50:
-            #     step = vectors[1]
-            # elif 0.50 <= walk < 0.75:
-            #     step = vectors[2]
-            # else:
-            #     step = vectors[3]
-
             try_x = model_path[-1][0] + step[0]
             try_y = model_path[-1][1] + step[1]
             if bound_x[0] < try_x < bound_x[1] and bound_y[0] < try_y < bound_y[1]:
@@ -506,34 +568,29 @@ class LevySims(object):
 
         return model_path
 
-    def levy_sim(self, obj, length, scale_range = range(1,10), bound_x=(-np.Inf, np.Inf), bound_y=(-np.Inf, np.Inf) ):
+    def levy_sim(self):
         '''
         Generates simulated object paths using a levy flight model with a true
         Levy distribution of displacements
 
         Parameters
-        ------------
+        ----------
         obj : integer specifying the number of object paths to be simulated
         length : integer specifying the length of each path to be simulated
 
         Returns
-        ------------
-        levy_paths : dict keyed by obj id, containing lists of tuples, each tuple
-        specifying the XY position of a simulated object at a given timepoint
-            levy_paths = {
-            0: [ (x1,y1), (x2,y2)...(x_n, y_n) ]
-            1: [ (x1,y1), (x2,y2)...(x_n, y_n) ]
-            ...
-            }
+        -------
+        levy_paths : dict
+            keyed by scale factor, values are `cell_ids` format dicts
         '''
 
         levy_paths = {}
 
-        for scale in scale_range:
+        for scale in self.levy_scale:
             levy_paths[scale] = {}
             i = 0
-            while i < obj:
-                model_path = self.levy_flier(N = length, scale_coeff=scale, bound_x=bound_x, bound_y=bound_y)
+            while i < self.obj:
+                model_path = self.levy_flier(N = self.length, scale_coeff=self.scale, bound_x=self.bound_x, bound_y=self.bound_y)
                 levy_paths[scale][i] = model_path
                 i += 1
 
@@ -541,11 +598,54 @@ class LevySims(object):
 
 
 class fBmsims(object):
-    def __init__(self, obj = 100, length = 100, H=0.8, bound_x=(-np.Inf, np.Inf), bound_y=(-np.Inf, np.Inf), scale_range=range(1,5) ):
-        self.fbm_paths = self.fbm_sim(obj, length, H, scale_range = scale_range, bound_x=bound_x, bound_y=bound_y)
+    '''
+    Simulates fractal Brownian motion walkers.
 
+    Attributes
+    ----------
+    obj : int
+        number of objects to simulate.
+    length : int
+        length of simulated tracks.
+    H : float
+        Hurst coefficient for fractal Brownian process
+    bound_x, bound_y : tuple, optional.
+        (min, max) allowed values for X and Y coordinates.
+    scale_range : iterable
+        scaling values for fBm walkers. 0.277 = 5 px step mean.
+    fbm_paths : dict
+        keyed by scale factor, values are `cell_ids` format dicts.
+    '''
 
-    def fbm_mat( self, gridN = 100, T = 100, H = 0.99 ):
+    def __init__(self, obj = 100, length = 100, H=0.8,
+                bound_x=(-np.Inf, np.Inf), bound_y=(-np.Inf, np.Inf),
+                scale_range=range(1,5) ):
+        '''Simulates fractal Brownian motion walkers.
+
+        Parameters
+        ----------
+        obj : int
+            number of objects to simulate.
+        length : int
+            length of simulated tracks.
+        H : float
+            Hurst coefficient for fractal Brownian process
+        bound_x, bound_y : tuple, optional.
+            (min, max) allowed values for X and Y coordinates.
+        scale_range : iterable
+            scaling values for fBm walkers. 0.277 = 5 px step mean.
+        '''
+
+        self.obj = obj
+        self.length = length
+        self.H = H
+        self.bound_x = bound_x
+        self.bound_y = bound_y
+        self.scale_range = scale_range
+
+        self.fbm_paths = self.fbm_sim()
+
+    def fbm_mat( self, gridN: int = 100, T: int=100, H: float=0.99 ) -> np.ndarray:
         '''
         Generates a Cholesky decomposition of a covariance matrix
 
@@ -554,15 +654,21 @@ class fBmsims(object):
         where n is a grid size parameter
 
         Parameters
-        -------------
-        gridN : size of grid to generate for the covariance matrix
-        T : length of displacement series to generate
-        H : hurst parameter [0,1]
+        ----------
+        gridN : int
+            size of grid to generate for the covariance matrix
+        T : int
+            length of displacement series to generate
+        H : float, (0,1)
+            hurst parameter (0,1)
 
         Returns
-        -------------
-        X : series of displacements following fBm for the given Hurst index
+        -------
+        X : np.ndarray
+            series of displacements following fBm for the given Hurst index
         '''
+        if not (H < 1 and H > 0):
+            raise ValueError('Hurst coefficient `H` must be 0 < H < 1')
 
         covr = np.arange(0,30)
         tcol = np.matrix(np.linspace(0,gridN,T)[1:])
@@ -571,20 +677,37 @@ class fBmsims(object):
         Gamma_c = np.linalg.cholesky(Gamma)
         return Gamma_c
 
-    def fbm_series(self, gridN = 100, T = 100, H = 0.99):
+    def fbm_series(self, gridN: int=100, T: int=100, H: float=0.99) -> np.ndarray:
         '''
         Generates a series of displacements simulating a fractal
-        Brownian process with a given Hurst parameter of length T using
-        the Cholesky decomposition method, as outlined in
+        Brownian process with a given Hurst parameter of length `T` using
+        the Cholesky decomposition method [1].
 
-        T. Dieker, Simulation of fractional Brownian motion, 2004
+        Parameters
+        ----------
+        gridN : int
+            size of grid to generate for the covariance matrix
+        T : int
+            length of displacement series to generate
+        H : float, (0,1)
+            hurst parameter (0,1)
 
-        Briefly:
+        Returns
+        -------
+        u : np.ndarray
+            series of a fBm process.
+
+        Notes
+        -----
         1. Generate a matrix Gamma = [ R(t_i,t_j), for i,j = 0...n ]
         2. take the cholesky decomposition of Gamma
         3. Find Sigma = cholesky_Gamme**0.5
         4. Generate a vector v or length n with Gaussian distributed values
         5. vector u = Sigma * v represents a fBm series
+
+        References
+        ----------
+        T. Dieker, Simulation of fractional Brownian motion, 2004
         '''
 
         sigma = self.fbm_mat(gridN = gridN, T = T, H = H)
@@ -623,7 +746,7 @@ class fBmsims(object):
 
         return model_path
 
-    def fbm_sim(self, obj, length, H, scale_range = np.linspace(0.1, 0.4, 10), bound_x=(-np.Inf, np.Inf), bound_y=(-np.Inf, np.Inf)):
+    def fbm_sim(self):
         '''
         Generates simulated object paths using a fractal Brownian motion model
 
@@ -636,36 +759,57 @@ class fBmsims(object):
 
         Returns
         ------------
-        fbm_paths : dict keyed by scale, containing dict keyed by obj id,
-        containing lists of tuples, each tuple
-        specifying the XY position of a simulated object at a given timepoint
-            fbm_paths = {
-            1: {
-            0: [ (x1,y1), (x2,y2)...(x_n, y_n) ]
-            1: [ (x1,y1), (x2,y2)...(x_n, y_n) ]
-            ...},
-            2: {
-            0: [ (x1,y1), (x2,y2)...(x_n, y_n) ]
-            1: [ (x1,y1), (x2,y2)...(x_n, y_n) ]
-            ...}
-            }
+        fbm_paths : dict keyed by scale, values are `cell_ids` format dicts.
 
+        Notes
+        -----
         scale = 0.277 is equivalent to mean displacement = 5 units
         '''
         fbm_paths = {}
 
-        for scale in scale_range:
+        for scale in self.scale_range:
             fbm_paths[scale] = {}
             i = 0
-            while i < obj:
-                model_path = self.fbm_walker(N = length, scale = scale, H = H, bound_x = bound_x, bound_y = bound_y)
+            while i < self.obj:
+                model_path = self.fbm_walker(N = self.length, scale = scale,
+                                            H = self.H,
+                                            bound_x = self.bound_x, bound_y = self.bound_y)
                 fbm_paths[scale][i] = model_path
                 i += 1
 
         return fbm_paths
 
 class MultiSim(object):
+    '''
+    Simulates objects that switch motion model state.
+
+    Attributes
+    ----------
+    obj : int
+        number of object paths to be simulated.
+    tau : int
+        length of each state to be simulated.
+    pwr2fbm : dict.
+        power walkers switching to fractal Brownian motion after `tau`.
+        keyed by object id, values are lists of coordinate tuples.
+    pwr2urw : dict.
+        power walkers switching to unbiased random walks after `tau`.
+        keyed by object id, values are lists of coordinate tuples.
+    fbm2urw : dict.
+        fractal Brownian motion switching to unbiased random walks after `tau`.
+        keyed by object id, values are lists of coordinate tuples.
+    '''
     def __init__(self, obj = 1000, tau = 20):
+        '''
+        Simulates objects that switch motion model state.
+
+        Parameters
+        ----------
+        obj : int
+            number of object paths to be simulated.
+        tau : int
+            length of each state to be simulated.
+        '''
         self.pwr2fbm_paths = self.power_fbm(obj = obj, tau = tau)
         self.pwr2urw_paths = self.power_urw(obj = obj, tau = tau)
         self.fbm2urw_paths = self.fbm_rw(obj = obj, tau = tau)
@@ -711,28 +855,3 @@ class MultiSim(object):
             comb_paths[u] = fbm_paths[u] + urw_paths
 
         return comb_paths
-
-
-
-
-#---------------------------
-# Export Simulated Data
-#---------------------------
-'''
-rws = RWSims(obj = 1000, length = 100)
-lfs = LevySims(obj = 1000, length = 100)
-
-for sim in [rws, lfs]:
-    cp = CellPaths(cell_ids = rws)
-    gf = GeneralFeatures(cell_ids = cp.cell_ids)
-    msdf = MSDFeatures(cell_ids = cp.cell_ids)
-    rwf = RWFeatures(cell_ids = cp.cell_ids, gf = gf)
-
-    ind_outputs = single_outputs_list(cp.cell_ids, gf = gf, rwf = rwf, msdf = msdf, 'sim_output')
-    diff_kurtosis_array = dictofdict2array(rwf.diff_kurtosis)
-    avg_moving_speed_array = dictofdict2array( gf.avg_moving_speed )
-    time_moving_array = dictofdict2array( gf.time_moving )
-    turn_list = tripledict2array(gf.turn_stats)
-    theta_list = tripledict2array(gf.theta_stats)
-    merged_list = merge_flat_lists([ind_outputs, diff_kurtosis_array, avg_moving_speed_array, time_moving_array, turn_list, theta_list])
-'''
