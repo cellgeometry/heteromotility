@@ -15,5 +15,6 @@ To begin, we generate ``heteromotility`` feature data from simulated random walk
   heteromotility demo/ --tracksX demo/rw_x.csv --tracksY demo/rw_y.csv --output_suffix rw
   heteromotility demo/ --tracksX demo/pf_x.csv --tracksY demo/pf_y.csv --output_suffix pf
 
-Please see the unsupervised clustering ``knitr`` notebook for detailed analysis steps using pre-provided
-``heteromotility tools``.
+Please see the unsupervised clustering ``R`` notebook for detailed analysis steps.
+
+`Unsupervised Clustering Notebook <https://github.com/cellgeometry/heteromotility/docs/tutorial/unsup_clustering.ipynb>`_
