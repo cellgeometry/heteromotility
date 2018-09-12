@@ -99,12 +99,13 @@ The optional argument `--output_suffix` can be used to add a suffix to the outpu
 
 ## Demo
 
-As a demonstration, simulated cell paths are provided for multiple models of motion in the `demo/` directory. These paths are saved as Python pickle objects.
+As a demonstration, simulated random walk and Levy flier cell paths are provided in the `demo/` directory. 
 
 To calculate Heteromotility features for a simulated path, simply run the following.
 
-    $ heteromotility demo/sim_XYZ/ --exttrack demo/sim_XYZ/sim_XYZ.pickle
-
+    $ heteromotility demo/ --tracksX demo/rw_x.csv --tracksY demo/rw_y.csv --output_suffix rw
+    $ heteromotility demo/ --tracksX demo/pf_x.csv --tracksY demo/pf_y.csv --output_suffix pf
+    
 ## Split Motility Path Calculation
 
 Heteromotility supports splitting an object's path into multiple subpaths and calculating features for each subpath. This is useful to investigate changes in an object's motility over time. This feature is triggered with the `--detailedbalance` command line flag, followed by an integer specifying the minimum number of path steps to consider. Heteromotility will calculate features for every subpath of the minimum length, and every possible length up to 1/2 the total length of the supplied path.  
