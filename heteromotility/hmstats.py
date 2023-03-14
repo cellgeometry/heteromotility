@@ -1142,7 +1142,7 @@ class RWFeatures(object):
             # Perform autocorrelation, lags [0,29] tested
             # Perform Ljung-Box Q-statistic calculation to determine if
             # autocorrelations detected are significant or random
-            ac, q, p = acf(X, unbiased = True, nlags = (max_tau+1), qstat=True)
+            ac, q, p = acf(X, adjusted = True, nlags = (max_tau+1), qstat=True)
             autocorr[u] = ac[1:max_tau]
             qstats[u] = q[1:max_tau]
             pvals[u] = p[1:max_tau]
