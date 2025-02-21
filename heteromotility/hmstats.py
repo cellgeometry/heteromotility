@@ -7,6 +7,7 @@
 from __future__ import division, print_function
 import numpy as np
 import math
+import inspect
 from scipy import stats
 from scipy import interpolate
 from statsmodels.tsa.stattools import acf, pacf
@@ -1142,7 +1143,17 @@ class RWFeatures(object):
             # Perform autocorrelation, lags [0,29] tested
             # Perform Ljung-Box Q-statistic calculation to determine if
             # autocorrelations detected are significant or random
-            ac, q, p = acf(X, unbiased = True, nlags = (max_tau+1), qstat=True)
+
+            # The "unbiased" argument of acf has been renamed to "adjusted".
+            # Check which parameter should be used
+            sig = inspect.signature(acf)
+            if "unbiased" in sig.parameters:
+                ac, q, p = acf(X, unbiased = True, nlags = (max_tau+1), qstat=True)
+            elif "adjusted" in sig.parameters:
+                ac, q, p = acf(X, adjusted = True, nlags = (max_tau+1), qstat=True)
+            else:
+                raise Exception("statsmodels.tsa.stattools.acf() has not `unbiased` or `adjusted` arguments.")
+            
             autocorr[u] = ac[1:max_tau]
             qstats[u] = q[1:max_tau]
             pvals[u] = p[1:max_tau]
